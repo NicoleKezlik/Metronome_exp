@@ -41,13 +41,13 @@
 
     var trial2 = {
         type: 'function-tap',
-        stimulus: 'sounds/tone_10.wav',
+        stimulus: '',
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, tty tapping on the button with the same tempo</p>",
         trial_duration: 3000,
         on_start: function () {
             alert("vibrating");
-            navigator.vibrate([500]);
+            navigator.vibrate([5000]);
         }
     };
 
