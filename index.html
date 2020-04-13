@@ -10,6 +10,14 @@
     <script src="jspsych-6.0.5/plugins/jspsych-function-tap.js"></script>
     <link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
 </head>
+<style>
+    .instruction{
+        text-align: center;
+        top: 10%;
+        left: 20%;
+        font-size: 80px;
+    }
+</style>
 <body>
 <script>
     var hello_trial = {
@@ -19,7 +27,7 @@
 
     var hello = {
         type: 'html-button-response',
-        stimulus: '<p>Welcome</p>',
+        stimulus: '<p class="instruction">Welcome</p>',
         choices: ['Continue'],
     };
 
