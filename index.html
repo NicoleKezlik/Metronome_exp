@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Metronom2</title>
+    <script src="jspsych-6.0.5/jspsych.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-html-button-response.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-plugin-try.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-function-tap.js"></script>
+    <link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
+</head>
+<body>
+<script>
+    var hello_trial = {
+        type: 'html-keyboard-response',
+        stimulus: 'Hello world!'
+    }
+
+    var hello = {
+        type: 'html-button-response',
+        stimulus: '<p>Welcome</p>',
+        choices: ['Continue'],
+    };
+
+    // var trial = {
+    //     type: 'function-tap',
+    //     stimulus: 'sounds/tone_10.wav',
+    //     choices: ['lion', 'elephant', 'monkey'],
+    //     prompt: "<p>Which animal made the sound?</p>",
+    //     button_html: '<img src="%choice%" />'
+    // };
+
+    var trial = {
+        type: 'function-tap',
+        stimulus: 'sounds/tone_10.wav',
+        choices: ['Tap'],
+        prompt: "<p>when the sound is over, try tapping on the button with the same tempo</p>",
+        trial_duration: 3000
+    };
+
+    var trial2 = {
+        type: 'function-tap',
+        stimulus: 'sounds/tone_10.wav',
+        choices: ['Tap'],
+        prompt: "<p>when the vibration is over, tty tapping on the button with the same tempo</p>",
+        trial_duration: 3000,
+        on_start: function () {
+            alert("vibrating");
+            navigator.vibrate([500]);
+        }
+    };
+
+    // var t = {
+    //     type: 'try',
+    //     stimulus: function(){alert("h")},
+    //     button: '<button>taptap</button>'
+    // }
+
+    jsPsych.init({
+        timeline: [hello,trial,trial2]
+    })
+</script>
+</body>
+</html>
