@@ -120,7 +120,7 @@ jsPsych.plugins["function-tap"] = (function() {
         display_element.innerHTML = html;
 
         for (var i = 0; i < trial.choices.length; i++) {
-            display_element.querySelector('#jspsych-audio-button-response-button-' + i).addEventListener('click', function(e){
+            display_element.querySelector('#jspsych-audio-button-response-button-' + i).addEventListener('touchstart', function(e){
                 handleGesture(e);
                 // var choice = e.currentTarget.getAttribute('data-choice'); // don't use dataset for jsdom compatibility
                 // after_response(choice);
