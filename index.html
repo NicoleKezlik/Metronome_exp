@@ -50,18 +50,18 @@
         stimulus: 'sounds/tone_10.wav',
         choices: ['Tap'],
         prompt: "<p>when the sound is over, try tapping on the button with the same tempo</p>",
-        trial_duration: 3000
+        trial_duration: 8000
     };
 
     var trial2 = {
         type: 'function-tap',
         stimulus: '',
         choices: ['Tap'],
-        prompt: "<p>when the vibration is over, tty tapping on the button with the same tempo</p>",
-        trial_duration: 3000,
+        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        trial_duration: 8000,
         on_start: function () {
             alert("vibrating");
-            navigator.vibrate([5000]);
+            navigator.vibrate([4000]);
         }
     };
 
