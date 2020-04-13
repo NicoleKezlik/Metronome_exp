@@ -31,6 +31,12 @@
         choices: ['Continue'],
     };
 
+    var finished = {
+        type: 'html-button-response',
+        stimulus: '<p class="instruction">You have finished</p><p class="instruction"> the experiment</p><br><p class="instruction">Thank you</p>',
+        choices: ['Continue'],
+    };
+
     // var trial = {
     //     type: 'function-tap',
     //     stimulus: 'sounds/tone_10.wav',
@@ -66,7 +72,7 @@
     // }
 
     jsPsych.init({
-        timeline: [hello,trial,trial2]
+        timeline: [hello,trial,trial2,finished]
     })
 </script>
 </body>

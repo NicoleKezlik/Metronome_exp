@@ -78,6 +78,28 @@
 
 }
 
+.jspsych-btn-tap {
+  display: inline-block;
+  padding: 6px 12px;
+  margin: 0px;
+  font-size: 360px;
+  font-weight: 400;
+  font-family: 'Open Sans', 'Arial', sans-serif;
+  cursor: pointer;
+  line-height: 1.4;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  background-image: none;
+  border: 1px solid transparent;
+  border-radius: 50%;
+  color: #333;
+  background-color: #fff;
+  border-color: #ccc;
+  touch-action: manipulation;
+
+}
+
 .jspsych-btn:hover {
   background-color: #ddd;
   border-color: #aaa;
