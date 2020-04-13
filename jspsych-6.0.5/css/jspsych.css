@@ -60,7 +60,7 @@
   display: inline-block;
   padding: 6px 12px;
   margin: 0px;
-  font-size: 40px;
+  font-size: 80px;
   font-weight: 400;
   font-family: 'Open Sans', 'Arial', sans-serif;
   cursor: pointer;
@@ -74,6 +74,8 @@
   color: #333;
   background-color: #fff;
   border-color: #ccc;
+  touch-action: manipulation;
+
 }
 
 .jspsych-btn:hover {
