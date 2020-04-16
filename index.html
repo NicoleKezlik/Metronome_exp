@@ -20,10 +20,6 @@
 </style>
 <body>
 <script>
-    var hello_trial = {
-        type: 'html-keyboard-response',
-        stimulus: 'Hello world!'
-    }
 
     var hello = {
         type: 'html-button-response',
@@ -37,15 +33,7 @@
         choices: ['Continue'],
     };
 
-    // var trial = {
-    //     type: 'function-tap',
-    //     stimulus: 'sounds/tone_10.wav',
-    //     choices: ['lion', 'elephant', 'monkey'],
-    //     prompt: "<p>Which animal made the sound?</p>",
-    //     button_html: '<img src="%choice%" />'
-    // };
-
-    var trial = {
+    var trial_sound_POC = {
         type: 'function-tap',
         stimulus: 'sounds/tone_10.wav',
         choices: ['Tap'],
@@ -53,7 +41,7 @@
         trial_duration: 8000
     };
 
-    var trial2 = {
+    var trial_tactile_POC = {
         type: 'function-tap',
         stimulus: '',
         choices: ['Tap'],
@@ -65,14 +53,81 @@
         }
     };
 
-    // var t = {
-    //     type: 'try',
-    //     stimulus: function(){alert("h")},
-    //     button: '<button>taptap</button>'
-    // }
+    var trial_tactile_150_50 = {
+        type: 'function-tap',
+        stimulus: '',
+        choices: ['Tap'],
+        prompt: "<p>150 vibrate, 50 stop</p>",
+        trial_duration: 8000,
+        on_start: function () {
+            alert("vibrating");
+            navigator.vibrate([150,50,150,50]);
+        }
+    };
+
+    var trial_tactile_100_100 = {
+        type: 'function-tap',
+        stimulus: '',
+        choices: ['Tap'],
+        prompt: "<p>150 vibrate, 50 stop</p>",
+        trial_duration: 8000,
+        on_start: function () {
+            alert("vibrating");
+            navigator.vibrate([100,100,100,100]);
+        }
+    };
+
+    var trial_tactile_50_150 = {
+        type: 'function-tap',
+        stimulus: '',
+        choices: ['Tap'],
+        prompt: "<p>150 vibrate, 50 stop</p>",
+        trial_duration: 8000,
+        on_start: function () {
+            alert("vibrating");
+            navigator.vibrate([50,150,50,150]);
+        }
+    };
+
+    var trial_tactile_40_160 = {
+        type: 'function-tap',
+        stimulus: '',
+        choices: ['Tap'],
+        prompt: "<p>150 vibrate, 50 stop</p>",
+        trial_duration: 8000,
+        on_start: function () {
+            alert("vibrating");
+            navigator.vibrate([40,160,40,160]);
+        }
+    };
+
+    var trial_tactile_30_170 = {
+        type: 'function-tap',
+        stimulus: '',
+        choices: ['Tap'],
+        prompt: "<p>150 vibrate, 50 stop</p>",
+        trial_duration: 8000,
+        on_start: function () {
+            alert("vibrating");
+            navigator.vibrate([30,170,30,170]);
+        }
+    };
+
+    var trial_tactile_20_180 = {
+        type: 'function-tap',
+        stimulus: '',
+        choices: ['Tap'],
+        prompt: "<p>150 vibrate, 50 stop</p>",
+        trial_duration: 8000,
+        on_start: function () {
+            alert("vibrating");
+            navigator.vibrate([20,180,20,180]);
+        }
+    };
+
 
     jsPsych.init({
-        timeline: [hello,trial,trial2,finished]
+        timeline: [hello,trial_sound_POC,trial_tactile_150_50,trial_tactile_100_100,trial_tactile_50_150,trial_tactile_40_160,trial_tactile_30_170,trial_tactile_20_180,finished]
     })
 </script>
 </body>
