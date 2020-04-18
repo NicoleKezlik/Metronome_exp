@@ -53,12 +53,25 @@
         }
     };
 
+
+    var trial_tactile_full_intensity = {
+        type: 'function-tap',
+        stimulus: '',
+        choices: ['Tap'],
+        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        trial_duration: 8000,
+        on_start: function () {
+            alert("vibrating");
+            navigator.vibrate([400,100,400,100,400,100,400,100,400,100,400,100]);
+        }
+    };
+
     var trial_tactile_150_50 = {
         type: 'function-tap',
         stimulus: '',
         choices: ['Tap'],
         prompt: "<p>150 vibrate, 50 stop</p>",
-        trial_duration: 8000,
+        trial_duration: 4000,
         on_start: function () {
             alert("vibrating");
             navigator.vibrate([150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50]);
@@ -70,7 +83,7 @@
         stimulus: '',
         choices: ['Tap'],
         prompt: "<p>100 vibrate, 100 stop</p>",
-        trial_duration: 8000,
+        trial_duration: 4000,
         on_start: function () {
             alert("vibrating");
             navigator.vibrate([100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100]);
@@ -82,7 +95,7 @@
         stimulus: '',
         choices: ['Tap'],
         prompt: "<p>50 vibrate, 150 stop</p>",
-        trial_duration: 8000,
+        trial_duration: 4000,
         on_start: function () {
             alert("vibrating");
             navigator.vibrate([50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150]);
@@ -94,7 +107,7 @@
         stimulus: '',
         choices: ['Tap'],
         prompt: "<p>40 vibrate, 160 stop</p>",
-        trial_duration: 8000,
+        trial_duration: 4000,
         on_start: function () {
             alert("vibrating");
             navigator.vibrate([40,160,40,160,40,160,40,160,40,160,40,160,40,160,40,160,40,160,40,160]);
@@ -106,7 +119,7 @@
         stimulus: '',
         choices: ['Tap'],
         prompt: "<p>30 vibrate, 170 stop</p>",
-        trial_duration: 8000,
+        trial_duration: 4000,
         on_start: function () {
             alert("vibrating");
             navigator.vibrate([30,170,30,170,30,170,30,170,30,170,30,170,30,170,30,170,30,170,30,170]);
@@ -118,7 +131,7 @@
         stimulus: '',
         choices: ['Tap'],
         prompt: "<p>20 vibrate, 180 stop</p>",
-        trial_duration: 8000,
+        trial_duration: 4000,
         on_start: function () {
             alert("vibrating");
             navigator.vibrate([20,180,20,180,20,180,20,180,20,180,20,180,20,180,20,180,20,180,20,180]);
