@@ -62,7 +62,19 @@
         trial_duration: 8000,
         on_start: function () {
             alert("vibrating");
-            navigator.vibrate([400,100,400,100,400,100,400,100,400,100,400,100]);
+            navigator.vibrate([500]);
+        }
+    };
+
+    var trial_tactile_partial_intensity = {
+        type: 'function-tap',
+        stimulus: '',
+        choices: ['Tap'],
+        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        trial_duration: 8000,
+        on_start: function () {
+            alert("vibrating");
+            navigator.vibrate([500]);
         }
     };
 
@@ -86,7 +98,7 @@
         trial_duration: 4000,
         on_start: function () {
             alert("vibrating");
-            navigator.vibrate([100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100,100]);
+            navigator.vibrate([100,400,100,400,100,400,100,400,100,400,100,400,100,400,100,400,100,400,100,400]);
         }
     };
 
@@ -98,7 +110,7 @@
         trial_duration: 4000,
         on_start: function () {
             alert("vibrating");
-            navigator.vibrate([50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150]);
+            navigator.vibrate([50,450,50,450,50,450,50,450,50,450,50,450,50,450,50,450,50,450,50,450]);
         }
     };
 
@@ -110,7 +122,7 @@
         trial_duration: 4000,
         on_start: function () {
             alert("vibrating");
-            navigator.vibrate([40,160,40,160,40,160,40,160,40,160,40,160,40,160,40,160,40,160,40,160]);
+            navigator.vibrate([40,460,40,460,40,460,40,460,40,460,40,460,40,460,40,460,40,460,40,460]);
         }
     };
 
@@ -122,7 +134,7 @@
         trial_duration: 4000,
         on_start: function () {
             alert("vibrating");
-            navigator.vibrate([30,170,30,170,30,170,30,170,30,170,30,170,30,170,30,170,30,170,30,170]);
+            navigator.vibrate([30,470,30,470,30,470,30,470,30,470,30,470,30,470,30,470,30,470,30,470]);
         }
     };
 
@@ -134,13 +146,13 @@
         trial_duration: 4000,
         on_start: function () {
             alert("vibrating");
-            navigator.vibrate([20,180,20,180,20,180,20,180,20,180,20,180,20,180,20,180,20,180,20,180]);
+            navigator.vibrate([20,480,20,480,20,480,20,480,20,480,20,480,20,480,20,480,20,480,20,480]);
         }
     };
 
 
     jsPsych.init({
-        timeline: [hello,trial_sound_POC,trial_tactile_150_50,trial_tactile_100_100,trial_tactile_50_150,trial_tactile_40_160,trial_tactile_30_170,trial_tactile_20_180,finished]
+        timeline: [hello,trial_sound_POC,trial_tactile_100_100,trial_tactile_50_150,trial_tactile_40_160,trial_tactile_30_170,trial_tactile_20_180,finished]
     })
 </script>
 </body>
