@@ -21,11 +21,31 @@
 <body>
 <script>
 
+    /*****CONSTANTS****/
+    TEMPOS_IN_MS = [200,341,583,997,1704];
+    VIBRATION_LENGTH = 70;
+    NUM_STIMULI_TRIAL = 30;
+
     var hello = {
         type: 'html-button-response',
         stimulus: '<p class="instruction">Welcome</p>',
         choices: ['Continue'],
     };
+
+    function create_vibration_tempo_arrays() {
+        tempos_arrays = [];
+        for(var i=0; i<TEMPOS_IN_MS.length; i++)
+        {
+            tempo_array = [];
+            for(var j=0; j<NUM_STIMULI_TRIAL; j++)
+            {
+                tempo_array.push(VIBRATION_LENGTH);
+                tempo_array.push(TEMPOS_IN_MS[i]-VIBRATION_LENGTH);
+            }
+            tempos_arrays.push(tempo_array);
+        }
+    }
+    create_vibration_tempo_arrays();
 
     var finished = {
         type: 'html-button-response',
@@ -33,126 +53,176 @@
         choices: ['Continue'],
     };
 
-    var trial_sound_POC = {
-        type: 'function-tap',
-        stimulus: 'sounds/tone_10.wav',
-        choices: ['Tap'],
-        prompt: "<p>when the sound is over, try tapping on the button with the same tempo</p>",
-        trial_duration: 8000
-    };
 
-    var trial_tactile_POC = {
+
+    var first_tempo_200 = {
         type: 'function-tap',
         stimulus: '',
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
-        trial_duration: 8000,
+        trial_duration: TEMPOS_IN_MS[0]*60,
         on_start: function () {
             alert("vibrating");
-            navigator.vibrate([400,100,400,100,400,100,400,100,400,100,400,100]);
+            navigator.vibrate(tempos_arrays[0]);
         }
     };
 
-
-    var trial_tactile_full_intensity = {
+    var second_tempo_341 = {
         type: 'function-tap',
         stimulus: '',
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
-        trial_duration: 8000,
+        trial_duration: TEMPOS_IN_MS[1]*60,
         on_start: function () {
             alert("vibrating");
-            navigator.vibrate([500]);
+            navigator.vibrate(tempos_arrays[1]);
         }
     };
 
-    var trial_tactile_partial_intensity = {
+    var third_tempo_583 = {
         type: 'function-tap',
         stimulus: '',
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
-        trial_duration: 8000,
+        trial_duration: TEMPOS_IN_MS[2]*60,
         on_start: function () {
             alert("vibrating");
-            navigator.vibrate([500]);
+            navigator.vibrate(tempos_arrays[2]);
         }
     };
 
-    var trial_tactile_150_50 = {
+    var forth_tempo_997 = {
         type: 'function-tap',
         stimulus: '',
         choices: ['Tap'],
-        prompt: "<p>150 vibrate, 50 stop</p>",
-        trial_duration: 4000,
+        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        trial_duration: TEMPOS_IN_MS[3]*60,
         on_start: function () {
             alert("vibrating");
-            navigator.vibrate([150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50]);
+            navigator.vibrate(tempos_arrays[3]);
         }
     };
 
-    var trial_tactile_100_100 = {
+    var fifth_tempo_1704 = {
         type: 'function-tap',
         stimulus: '',
         choices: ['Tap'],
-        prompt: "<p>100 vibrate, 100 stop</p>",
-        trial_duration: 8000,
+        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        trial_duration: TEMPOS_IN_MS[4]*60,
         on_start: function () {
             alert("vibrating");
-            navigator.vibrate([100,400,100,400,100,400,100,400,100,400,100,400,100,400,100,400,100,400,100,400]);
+            navigator.vibrate(tempos_arrays[4]);
         }
     };
 
-    var trial_tactile_50_150 = {
-        type: 'function-tap',
-        stimulus: '',
-        choices: ['Tap'],
-        prompt: "<p>50 vibrate, 150 stop</p>",
-        trial_duration: 8000,
-        on_start: function () {
-            alert("vibrating");
-            navigator.vibrate([50,450,50,450,50,450,50,450,50,450,50,450,50,450,50,450,50,450,50,450]);
-        }
-    };
 
-    var trial_tactile_40_160 = {
-        type: 'function-tap',
-        stimulus: '',
-        choices: ['Tap'],
-        prompt: "<p>40 vibrate, 160 stop</p>",
-        trial_duration: 8000,
-        on_start: function () {
-            alert("vibrating");
-            navigator.vibrate([40,460,40,460,40,460,40,460,40,460,40,460,40,460,40,460,40,460,40,460]);
-        }
-    };
+    /*****proof of concept*****/
+    // var trial_sound_POC = {
+    //     type: 'function-tap',
+    //     stimulus: 'sounds/tone_10.wav',
+    //     choices: ['Tap'],
+    //     prompt: "<p>when the sound is over, try tapping on the button with the same tempo</p>",
+    //     trial_duration: 8000
+    // };
+    //
+    // var trial_tactile_POC = {
+    //     type: 'function-tap',
+    //     stimulus: '',
+    //     choices: ['Tap'],
+    //     prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+    //     trial_duration: 8000,
+    //     on_start: function () {
+    //         alert("vibrating");
+    //         navigator.vibrate([400,100,400,100,400,100,400,100,400,100,400,100]);
+    //     }
+    // };
 
-    var trial_tactile_30_170 = {
-        type: 'function-tap',
-        stimulus: '',
-        choices: ['Tap'],
-        prompt: "<p>30 vibrate, 170 stop</p>",
-        trial_duration: 8000,
-        on_start: function () {
-            alert("vibrating");
-            navigator.vibrate([30,470,30,470,30,470,30,470,30,470,30,470,30,470,30,470,30,470,30,470]);
-        }
-    };
+    /******different lengths of vibration in 200 ms intervals******/
+    // var trial_tactile_150_50 = {
+    //     type: 'function-tap',
+    //     stimulus: '',
+    //     choices: ['Tap'],
+    //     prompt: "<p>150 vibrate, 50 stop</p>",
+    //     trial_duration: 4000,
+    //     on_start: function () {
+    //         alert("vibrating");
+    //         navigator.vibrate([150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50]);
+    //     }
+    // };
+    //
+    // var trial_tactile_100_100 = {
+    //     type: 'function-tap',
+    //     stimulus: '',
+    //     choices: ['Tap'],
+    //     prompt: "<p>100 vibrate, 100 stop</p>",
+    //     trial_duration: 8000,
+    //     on_start: function () {
+    //         alert("vibrating");
+    //         navigator.vibrate([100,400,100,400,100,400,100,400,100,400,100,400,100,400,100,400,100,400,100,400]);
+    //     }
+    // };
+    //
+    // var trial_tactile_50_150 = {
+    //     type: 'function-tap',
+    //     stimulus: '',
+    //     choices: ['Tap'],
+    //     prompt: "<p>50 vibrate, 150 stop</p>",
+    //     trial_duration: 8000,
+    //     on_start: function () {
+    //         alert("vibrating");
+    //         navigator.vibrate([50,450,50,450,50,450,50,450,50,450,50,450,50,450,50,450,50,450,50,450]);
+    //     }
+    // };
+    //
+    // var trial_tactile_40_160 = {
+    //     type: 'function-tap',
+    //     stimulus: '',
+    //     choices: ['Tap'],
+    //     prompt: "<p>40 vibrate, 160 stop</p>",
+    //     trial_duration: 8000,
+    //     on_start: function () {
+    //         alert("vibrating");
+    //         navigator.vibrate([40,460,40,460,40,460,40,460,40,460,40,460,40,460,40,460,40,460,40,460]);
+    //     }
+    // };
+    //
+    // var trial_tactile_30_170 = {
+    //     type: 'function-tap',
+    //     stimulus: '',
+    //     choices: ['Tap'],
+    //     prompt: "<p>30 vibrate, 170 stop</p>",
+    //     trial_duration: 8000,
+    //     on_start: function () {
+    //         alert("vibrating");
+    //         navigator.vibrate([30,470,30,470,30,470,30,470,30,470,30,470,30,470,30,470,30,470,30,470]);
+    //     }
+    // };
+    //
+    // var trial_tactile_20_180 = {
+    //     type: 'function-tap',
+    //     stimulus: '',
+    //     choices: ['Tap'],
+    //     prompt: "<p>20 vibrate, 180 stop</p>",
+    //     trial_duration: 8000,
+    //     on_start: function () {
+    //         alert("vibrating");
+    //         navigator.vibrate([20,480,20,480,20,480,20,480,20,480,20,480,20,480,20,480,20,480,20,480]);
+    //     }
+    // };
 
-    var trial_tactile_20_180 = {
-        type: 'function-tap',
-        stimulus: '',
-        choices: ['Tap'],
-        prompt: "<p>20 vibrate, 180 stop</p>",
-        trial_duration: 8000,
-        on_start: function () {
-            alert("vibrating");
-            navigator.vibrate([20,480,20,480,20,480,20,480,20,480,20,480,20,480,20,480,20,480,20,480]);
-        }
-    };
+    var timeline = [];
+    timeline.push(hello);
+    all_types = [first_tempo_200,second_tempo_341,third_tempo_583,forth_tempo_997,fifth_tempo_1704];
+    tactile_block = jsPsych.randomization.repeat(all_types,4);
+    for(var i = 0; i<tactile_block.length; i++)
+    {
+        timeline.push(tactile_block[i]);
+    }
+    timeline.push(finished);
 
 
     jsPsych.init({
-        timeline: [hello,trial_sound_POC,trial_tactile_100_100,trial_tactile_50_150,trial_tactile_40_160,trial_tactile_30_170,trial_tactile_20_180,finished]
+        timeline: timeline
     })
 </script>
 </body>
