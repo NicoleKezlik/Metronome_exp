@@ -82,7 +82,7 @@
   display: inline-block;
   padding: 6px 12px;
   margin: 0px;
-  font-size: 360px;
+  font-size: 300px;
   font-weight: 400;
   font-family: 'Open Sans', 'Arial', sans-serif;
   cursor: pointer;
@@ -91,20 +91,15 @@
   white-space: nowrap;
   vertical-align: middle;
   background-image: none;
+  height: 600px;
+  width: 600px;
   border: 1px solid transparent;
   border-radius: 50%;
   color: #333;
   background-color: #fff;
   border-color: #ccc;
+  outline: none;
   touch-action: manipulation;
-  -webkit-touch-callout: none; /* iOS Safari */
-  -webkit-user-select: none; /* Safari */
-  -khtml-user-select: none; /* Konqueror HTML */
-  -moz-user-select: none; /* Old versions of Firefox */
-  -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Opera and Firefox */
-
 }
 
 .jspsych-btn:hover {
