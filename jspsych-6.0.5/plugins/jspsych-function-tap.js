@@ -24,7 +24,7 @@ jsPsych.plugins["function-tap"] = (function() {
             button_html: {
                 type: jsPsych.plugins.parameterType.HTML_STRING,
                 pretty_name: 'Button HTML',
-                default: '<button class="jspsych-btn-tap">%choice%</button>',
+                default: '<button class="jspsych-btn-tap" class="focus">%choice%</button>',
                 array: true,
                 description: 'Custom button. Can make your own style.'
             },
