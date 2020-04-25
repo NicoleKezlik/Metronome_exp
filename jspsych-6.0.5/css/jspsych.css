@@ -100,12 +100,8 @@
   border-color: #ccc;
   outline: none;
   touch-action: manipulation;
-  box-shadow:none;
 }
 
-input:focus {
-  outline: none;
-}
 
 .jspsych-btn:hover {
   background-color: #ddd;
