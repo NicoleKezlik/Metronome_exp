@@ -103,6 +103,10 @@
   box-shadow:none;
 }
 
+input:focus {
+  outline: none;
+}
+
 .jspsych-btn:hover {
   background-color: #ddd;
   border-color: #aaa;
