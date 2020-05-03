@@ -26,6 +26,16 @@
     VIBRATION_LENGTH = 70;
     NUM_STIMULI_TRIAL = 30;
 
+    //-----saving data-----//
+    function saveData(name, data){
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({filename: name, filedata: data}));
+    }
+
+
+
     var hello = {
         type: 'html-button-response',
         stimulus: '<p class="instruction">Welcome</p>',
@@ -256,16 +266,18 @@
     timeline.push(first_tempo_200_noise);
     all_types = [first_tempo_200,second_tempo_341,third_tempo_583,forth_tempo_997,fifth_tempo_1704];
     tactile_block = jsPsych.randomization.repeat(all_types,4);
-    for(var i = 0; i<tactile_block.length; i++)
-    {
-        timeline.push(tactile_block[i]);
-    }
+    // for(var i = 0; i<tactile_block.length; i++)
+    // {
+    //     timeline.push(tactile_block[i]);
+    // }
     timeline.push(finished);
 
 
     jsPsych.init({
-        timeline: timeline
-    })
+        timeline: timeline,
+        on_finish: function(){ saveData("experiment_data", jsPsych.data.get().csv()); }
+
+    });
 </script>
 </body>
 </html>
