@@ -1,6 +1,0 @@
-﻿"rt","stimulus","button_pressed","trial_type","trial_index","time_elapsed","internal_node_id"
-"1462","<p class=""instruction"">Welcome</p>","0","html-button-response","0","1464","0.0-0.0"
-"null","sounds/white_with_silence1.wav","null","function-tap","1","16606","0.0-1.0"
-"null","sounds/pink_with_silence1.wav","null","function-tap","2","31233","0.0-2.0"
-"null","sounds/noise_with_silence1.wav","null","function-tap","3","46933","0.0-3.0"
-"2066","<p class=""instruction"">You have finished</p><p class=""instruction""> the experiment</p><br><p class=""instruction"">Thank you</p>","0","html-button-response","4","49001","0.0-4.0"
