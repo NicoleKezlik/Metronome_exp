@@ -38,7 +38,7 @@
 
     var hello = {
         type: 'html-button-response',
-        stimulus: '<p class="instruction">Welcome</p>',
+        stimulus: '<p class="instruction">שלום</p>',
         choices: ['Continue'],
     };
 
@@ -275,7 +275,9 @@
 
     jsPsych.init({
         timeline: timeline,
-        on_finish: function(){ saveData("experiment_data", jsPsych.data.get().csv()); }
+        on_finish: function(){
+
+            saveData("experiment_data1", jsPsych.data.get().csv()); }
 
     });
 </script>
