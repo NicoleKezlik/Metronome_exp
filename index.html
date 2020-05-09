@@ -5,6 +5,7 @@
     <title>Metronom2</title>
     <script src="jspsych-6.0.5/jspsych.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-survey-text.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-html-button-response.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-plugin-try.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-function-tap.js"></script>
@@ -63,6 +64,18 @@
         choices: ['Continue'],
     };
     /////////////////////////////////////////
+
+    //training//
+    var vibration_check = {
+        type: 'survey-text',
+        questions: [
+            {prompt: "כמה רטטיטות הרגשת?"},
+        ],
+        on_start: function () {
+            navigator.vibrate([1,500,70,517,70,517,70,517,70,517,70,517]);
+        }
+    };
+    /////////////
 
     //*******tactile block********//
     function create_vibration_tempo_arrays() {
@@ -169,9 +182,10 @@
     //     }
     // };
 
-
+    ///-------------------time line-------------------///
     var timeline = [];
     timeline.push(test_procedure);
+    timeline.push(vibration_check);
     //push tactile block
     for(var i = 0; i<tactile_block.length; i++)
     {
@@ -179,7 +193,7 @@
     }
     timeline.push(finished);
 
-
+    ///----------------------init----------------------///
     jsPsych.init({
         timeline: timeline,
         on_finish: function(){
