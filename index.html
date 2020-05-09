@@ -23,6 +23,7 @@
 
     /*****CONSTANTS****/
     TEMPOS_IN_MS = [200,341,583,997,1704];
+    TIME_BEFORE_VIBRATE_IN_MS = 500;  //half a second
     VIBRATION_LENGTH = 70;
     NUM_STIMULI_TRIAL = 30;
 
@@ -33,7 +34,6 @@
         xhr.setRequestHeader('Content-Type', 'application/json');
         xhr.send(JSON.stringify({filename: name, filedata: data}));
     }
-
 
     //*****instructions*****//
     var test_stimuli = [
@@ -57,12 +57,21 @@
         timeline_variables: test_stimuli
     };
 
+    var finished = {
+        type: 'html-button-response',
+        stimulus: '<p class="instruction">You have finished</p><p class="instruction"> the experiment</p><br><p class="instruction">Thank you</p>',
+        choices: ['Continue'],
+    };
+    /////////////////////////////////////////
 
+    //*******tactile block********//
     function create_vibration_tempo_arrays() {
         tempos_arrays = [];
         for(var i=0; i<TEMPOS_IN_MS.length; i++)
         {
             tempo_array = [];
+            tempo_array.push(1);
+            tempo_array.push(TIME_BEFORE_VIBRATE_IN_MS);
             for(var j=0; j<NUM_STIMULI_TRIAL; j++)
             {
                 tempo_array.push(VIBRATION_LENGTH);
@@ -72,27 +81,6 @@
         }
     }
     create_vibration_tempo_arrays();
-
-    var finished = {
-        type: 'html-button-response',
-        stimulus: '<p class="instruction">You have finished</p><p class="instruction"> the experiment</p><br><p class="instruction">Thank you</p>',
-        choices: ['Continue'],
-    };
-
-
-
-    var first_tempo_200_white = {
-        type: 'function-tap',
-        stimulus: 'sounds/white_with_silence1.wav',
-        choices: ['Tap'],
-        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
-        trial_duration: TEMPOS_IN_MS[0]*60,
-        on_start: function () {
-            alert("vibrating");
-            navigator.vibrate(tempos_arrays[0]);
-        }
-    };
-
 
     var first_tempo_200_pink = {
         type: 'function-tap',
@@ -106,35 +94,9 @@
         }
     };
 
-
-    var first_tempo_200_noise = {
-        type: 'function-tap',
-        stimulus: 'sounds/noise_with_silence1.wav',
-        choices: ['Tap'],
-        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
-        trial_duration: TEMPOS_IN_MS[0]*60,
-        on_start: function () {
-            alert("vibrating");
-            navigator.vibrate(tempos_arrays[0]);
-        }
-    };
-
-
-    var first_tempo_200 = {
-        type: 'function-tap',
-        stimulus: '',
-        choices: ['Tap'],
-        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
-        trial_duration: TEMPOS_IN_MS[0]*60,
-        on_start: function () {
-            alert("vibrating");
-            navigator.vibrate(tempos_arrays[0]);
-        }
-    };
-
     var second_tempo_341 = {
         type: 'function-tap',
-        stimulus: '',
+        stimulus: 'sounds/pink_with_silence1.wav',
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
         trial_duration: TEMPOS_IN_MS[1]*60,
@@ -146,7 +108,7 @@
 
     var third_tempo_583 = {
         type: 'function-tap',
-        stimulus: '',
+        stimulus: 'sounds/pink_with_silence1.wav',
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
         trial_duration: TEMPOS_IN_MS[2]*60,
@@ -158,7 +120,7 @@
 
     var forth_tempo_997 = {
         type: 'function-tap',
-        stimulus: '',
+        stimulus: 'sounds/pink_with_silence1.wav',
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
         trial_duration: TEMPOS_IN_MS[3]*60,
@@ -170,7 +132,7 @@
 
     var fifth_tempo_1704 = {
         type: 'function-tap',
-        stimulus: '',
+        stimulus: 'sounds/pink_with_silence1.wav',
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
         trial_duration: TEMPOS_IN_MS[4]*60,
@@ -179,6 +141,11 @@
             navigator.vibrate(tempos_arrays[4]);
         }
     };
+
+    all_types = [first_tempo_200_pink,second_tempo_341,third_tempo_583,forth_tempo_997,fifth_tempo_1704];
+    // tactile_block = jsPsych.randomization.repeat(all_types,4);
+    tactile_block = jsPsych.randomization.repeat(all_types,1);  //for now change to 1
+    ////////////////////////////////////////////////////////////
 
 
     /*****proof of concept*****/
@@ -202,97 +169,20 @@
     //     }
     // };
 
-    /******different lengths of vibration in 200 ms intervals******/
-    // var trial_tactile_150_50 = {
-    //     type: 'function-tap',
-    //     stimulus: '',
-    //     choices: ['Tap'],
-    //     prompt: "<p>150 vibrate, 50 stop</p>",
-    //     trial_duration: 4000,
-    //     on_start: function () {
-    //         alert("vibrating");
-    //         navigator.vibrate([150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50,150,50]);
-    //     }
-    // };
-    //
-    // var trial_tactile_100_100 = {
-    //     type: 'function-tap',
-    //     stimulus: '',
-    //     choices: ['Tap'],
-    //     prompt: "<p>100 vibrate, 100 stop</p>",
-    //     trial_duration: 8000,
-    //     on_start: function () {
-    //         alert("vibrating");
-    //         navigator.vibrate([100,400,100,400,100,400,100,400,100,400,100,400,100,400,100,400,100,400,100,400]);
-    //     }
-    // };
-    //
-    // var trial_tactile_50_150 = {
-    //     type: 'function-tap',
-    //     stimulus: '',
-    //     choices: ['Tap'],
-    //     prompt: "<p>50 vibrate, 150 stop</p>",
-    //     trial_duration: 8000,
-    //     on_start: function () {
-    //         alert("vibrating");
-    //         navigator.vibrate([50,450,50,450,50,450,50,450,50,450,50,450,50,450,50,450,50,450,50,450]);
-    //     }
-    // };
-    //
-    // var trial_tactile_40_160 = {
-    //     type: 'function-tap',
-    //     stimulus: '',
-    //     choices: ['Tap'],
-    //     prompt: "<p>40 vibrate, 160 stop</p>",
-    //     trial_duration: 8000,
-    //     on_start: function () {
-    //         alert("vibrating");
-    //         navigator.vibrate([40,460,40,460,40,460,40,460,40,460,40,460,40,460,40,460,40,460,40,460]);
-    //     }
-    // };
-    //
-    // var trial_tactile_30_170 = {
-    //     type: 'function-tap',
-    //     stimulus: '',
-    //     choices: ['Tap'],
-    //     prompt: "<p>30 vibrate, 170 stop</p>",
-    //     trial_duration: 8000,
-    //     on_start: function () {
-    //         alert("vibrating");
-    //         navigator.vibrate([30,470,30,470,30,470,30,470,30,470,30,470,30,470,30,470,30,470,30,470]);
-    //     }
-    // };
-    //
-    // var trial_tactile_20_180 = {
-    //     type: 'function-tap',
-    //     stimulus: '',
-    //     choices: ['Tap'],
-    //     prompt: "<p>20 vibrate, 180 stop</p>",
-    //     trial_duration: 8000,
-    //     on_start: function () {
-    //         alert("vibrating");
-    //         navigator.vibrate([20,480,20,480,20,480,20,480,20,480,20,480,20,480,20,480,20,480,20,480]);
-    //     }
-    // };
 
     var timeline = [];
     timeline.push(test_procedure);
-    timeline.push(first_tempo_200_white);
-    timeline.push(first_tempo_200_pink);
-    timeline.push(first_tempo_200_noise);
-    all_types = [first_tempo_200,second_tempo_341,third_tempo_583,forth_tempo_997,fifth_tempo_1704];
-    tactile_block = jsPsych.randomization.repeat(all_types,4);
-    // for(var i = 0; i<tactile_block.length; i++)
-    // {
-    //     timeline.push(tactile_block[i]);
-    // }
+    //push tactile block
+    for(var i = 0; i<tactile_block.length; i++)
+    {
+        timeline.push(tactile_block[i]);
+    }
     timeline.push(finished);
 
 
     jsPsych.init({
         timeline: timeline,
         on_finish: function(){
-
             saveData("experiment_data1", jsPsych.data.get().csv()); }
 
     });
