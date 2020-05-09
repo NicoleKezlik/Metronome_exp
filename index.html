@@ -35,12 +35,28 @@
     }
 
 
-
-    var hello = {
-        type: 'html-button-response',
-        stimulus: '<p class="instruction">שלום</p>',
-        choices: ['Continue'],
+    //*****instructions*****//
+    var test_stimuli = [
+        {stimulus: '<h2 class="instruction">שלום, ברוך הבא לניסוי שלנו</h2><p class="instruction">אנא חבר אוזניות </p><p class="instruction"> כדי לשמוע את ההוראות</p>'},
+        {stimulus: '<p class="instruction">אורך הניסוי הוא כ-20 דקות  </p><p class="instruction"> אנא שב במקום נוח</p><br><br><br>'},
+        { stimulus: '<p class="instruction">שב במקום שקט וללא הפרעות</p><br><br><br>'},
+        { stimulus: '<p class="instruction">הוצא את הטלפון </p><p class="instruction">מהכיסוי (קייס)</p>'},
+        {stimulus: '<p class="instruction">.החזק את הטלפון ביד החזקה</p><p class="instruction"> אל תחליף ידיים לאורך הניסוי</p>'},
+        {stimulus: '<p class="instruction">אנא חבר אוזניות, וודא שהן</p><p class="instruction">יושבות בנוחות בשתי אוזנייך</p>'},
+        {stimulus: '<p class="instruction">שים את הפלאפון במצב</p><p class="instruction">(לא במצב שקט)רעש</p>'},
+        {stimulus: '<p class="instruction">שים את הפלאפון על ווליום </p><p class="instruction">הכי גבוה/אמצע</p>'},
+        {stimulus: '<p class="instruction">אנא צא מכל האפליקציות </p><p class="instruction">הרקע האחרות</p>'}
+    ];
+    var instruction = {
+        type: "html-button-response",
+        stimulus: jsPsych.timelineVariable('stimulus'),
+        choices: ['המשך']
     };
+    var test_procedure = {
+        timeline: [instruction],
+        timeline_variables: test_stimuli
+    };
+
 
     function create_vibration_tempo_arrays() {
         tempos_arrays = [];
@@ -260,7 +276,7 @@
     // };
 
     var timeline = [];
-    timeline.push(hello);
+    timeline.push(test_procedure);
     timeline.push(first_tempo_200_white);
     timeline.push(first_tempo_200_pink);
     timeline.push(first_tempo_200_noise);
