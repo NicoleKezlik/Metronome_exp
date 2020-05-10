@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Metronom2</title>
+    <script src="jatos.js"></script>
     <script src="jspsych-6.0.5/jspsych.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-survey-text.js"></script>
@@ -29,12 +30,12 @@
     NUM_STIMULI_TRIAL = 30;
 
     //-----saving data-----//
-    function saveData(name, data){
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify({filename: name, filedata: data}));
-    }
+    // function saveData(name, data){
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
+    //     xhr.setRequestHeader('Content-Type', 'application/json');
+    //     xhr.send(JSON.stringify({filename: name, filedata: data}));
+    // }
 
     //*****instructions*****//
     var test_stimuli = [
@@ -199,12 +200,13 @@
     timeline.push(finished);
 
     ///----------------------init----------------------///
-    jsPsych.init({
-        timeline: timeline,
-        on_finish: function(){
-            saveData("experiment_data1", jsPsych.data.get().csv()); }
 
+    jatos.onLoad(function() {
+        jsPsych.init({
+            timeline: timeline,
+        });
     });
+
 </script>
 </body>
 </html>
