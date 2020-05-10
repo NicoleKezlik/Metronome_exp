@@ -38,7 +38,7 @@
 
     //*****instructions*****//
     var test_stimuli = [
-        {stimulus: '<h3 class="instruction">שלום, ברוך הבא לניסוי שלנו</h3><p class="instruction">אנא חבר אוזניות </p><p class="instruction"> כדי לשמוע את ההוראות</p>'},
+        {stimulus: '<h3 class="instruction">שלום!, ברוך הבא לניסוי שלנו</h3><p class="instruction">אנא חבר אוזניות </p><p class="instruction"> כדי לשמוע את ההוראות</p>'},
         {stimulus: '<p class="instruction">אורך הניסוי הוא כ-20 דקות  </p><p class="instruction"> אנא שב במקום נוח</p>'},
         { stimulus: '<p class="instruction">שב במקום שקט וללא הפרעות</p><br><br><br>'},
         { stimulus: '<p class="instruction">הוצא את הטלפון </p><p class="instruction">מהכיסוי (קייס)</p>'},
@@ -75,7 +75,7 @@
             navigator.vibrate([1,500,70,517,70,517,70,517,70,517,70,517]);
         },
         on_finish: function () {
-            jsPsych.data.displayData();
+            jsPsych.data.displayData('csv');
         }
     };
     /////////////
