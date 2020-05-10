@@ -73,6 +73,9 @@
         ],
         on_start: function () {
             navigator.vibrate([1,500,70,517,70,517,70,517,70,517,70,517]);
+        },
+        on_finish: function () {
+            jsPsych.data.displayData();
         }
     };
     /////////////
