@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Metronom2</title>
-    <script src="jatos.js"></script>
+<!--    comment jatos for run in github    -->
+<!--    <script src="jatos.js"></script>-->
     <script src="jspsych-6.0.5/jspsych.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-survey-text.js"></script>
@@ -28,6 +29,8 @@
     TIME_BEFORE_VIBRATE_IN_MS = 500;  //half a second
     VIBRATION_LENGTH = 70;
     NUM_STIMULI_TRIAL = 30;
+    CONTRA_BALANCE = Math.round(Math.random()); // 0 auditory block is first, 1 tactile block is first
+
 
     //-----saving data-----//
     // function saveData(name, data){
@@ -41,8 +44,8 @@
     var test_stimuli = [
         {stimulus: '<h3 class="instruction">שלום!!, ברוך הבא לניסוי שלנו</h3><p class="instruction">אנא חבר אוזניות </p><p class="instruction"> כדי לשמוע את ההוראות</p>'},
         {stimulus: '<p class="instruction">אורך הניסוי הוא כ-20 דקות  </p><p class="instruction"> אנא שב במקום נוח</p>'},
-        { stimulus: '<p class="instruction">שב במקום שקט וללא הפרעות</p><br><br><br>'},
-        { stimulus: '<p class="instruction">הוצא את הטלפון </p><p class="instruction">מהכיסוי (קייס)</p>'},
+        {stimulus: '<p class="instruction">שב במקום שקט וללא הפרעות</p><br><br><br>'},
+        {stimulus: '<p class="instruction">הוצא את הטלפון </p><p class="instruction">מהכיסוי (קייס)</p>'},
         {stimulus: '<p class="instruction">.החזק את הטלפון ביד החזקה</p><p class="instruction"> אל תחליף ידיים לאורך הניסוי</p>'},
         {stimulus: '<p class="instruction">אנא חבר אוזניות, וודא שהן</p><p class="instruction">יושבות בנוחות בשתי אוזנייך</p>'},
         {stimulus: '<p class="instruction">שים את הפלאפון במצב</p><p class="instruction">(לא במצב שקט)רעש</p>'},
@@ -54,7 +57,7 @@
         stimulus: jsPsych.timelineVariable('stimulus'),
         choices: ['המשך']
     };
-    var test_procedure = {
+    var instruction_procedure = {
         timeline: [instruction],
         timeline_variables: test_stimuli
     };
@@ -161,50 +164,104 @@
         }
     };
 
-    all_types = [first_tempo_200_pink,second_tempo_341,third_tempo_583,forth_tempo_997,fifth_tempo_1704];
+    all_types_tactile = [first_tempo_200_pink,second_tempo_341,third_tempo_583,forth_tempo_997,fifth_tempo_1704];
     // tactile_block = jsPsych.randomization.repeat(all_types,4);
-    tactile_block = jsPsych.randomization.repeat(all_types,1);  //for now change to 1
+    tactile_block = jsPsych.randomization.repeat(all_types_tactile,1);  //for now change to 1
     ////////////////////////////////////////////////////////////
 
+    //*******auditory block********//
+    var first_auditory_200_pink = {
+        type: 'function-tap',
+        stimulus: 'sounds/new_sounds/auditory_with_pink1.wav',
+        choices: ['Tap'],
+        prompt: "<p>try tapping on the button with the same tempo</p>",
+        trial_ends_after_audio: true
+    };
 
-    /*****proof of concept*****/
-    // var trial_sound_POC = {
-    //     type: 'function-tap',
-    //     stimulus: 'sounds/tone_10.wav',
-    //     choices: ['Tap'],
-    //     prompt: "<p>when the sound is over, try tapping on the button with the same tempo</p>",
-    //     trial_duration: 8000
-    // };
-    //
-    // var trial_tactile_POC = {
-    //     type: 'function-tap',
-    //     stimulus: '',
-    //     choices: ['Tap'],
-    //     prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
-    //     trial_duration: 8000,
-    //     on_start: function () {
-    //         alert("vibrating");
-    //         navigator.vibrate([400,100,400,100,400,100,400,100,400,100,400,100]);
-    //     }
-    // };
+    var second_auditory_341 = {
+        type: 'function-tap',
+        stimulus: 'sounds/new_sounds/auditory_with_pink2.wav',
+        choices: ['Tap'],
+        prompt: "<p>try tapping on the button with the same tempo</p>",
+        trial_ends_after_audio: true
+    };
+
+    var third_auditory_583 = {
+        type: 'function-tap',
+        stimulus: 'sounds/new_sounds/auditory_with_pink3.wav',
+        choices: ['Tap'],
+        prompt: "<p>try tapping on the button with the same tempo</p>",
+        trial_ends_after_audio: true
+    };
+
+    var forth_auditory_997 = {
+        type: 'function-tap',
+        stimulus: 'sounds/new_sounds/auditory_with_pink4.wav',
+        choices: ['Tap'],
+        prompt: "<p>try tapping on the button with the same tempo</p>",
+        trial_ends_after_audio: true
+    };
+
+    var fifth_auditory_1704 = {
+        type: 'function-tap',
+        stimulus: 'sounds/new_sounds/auditory_with_pink5.wav',
+        choices: ['Tap'],
+        prompt: "<p>try tapping on the button with the same tempo</p>",
+        trial_ends_after_audio: true
+    };
+
+    all_types_auditory = [first_auditory_200_pink,second_auditory_341,third_auditory_583,forth_auditory_997,fifth_auditory_1704];
+    auditory_block = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
+    /////////////////////////////////////////////////////////////////////////////////////////////
+
+    function push_auditory() {
+        //push auditory block
+        for(var i = 0; i<auditory_block.length; i++)
+        {
+            timeline.push(auditory_block[i]);
+        }
+    }
+
+    function push_tactile() {
+        //push tactile block
+        for(var i = 0; i<tactile_block.length; i++)
+        {
+            timeline.push(tactile_block[i]);
+        }
+    }
+    
 
     ///-------------------time line-------------------///
     var timeline = [];
-    timeline.push(test_procedure);
+    timeline.push(instruction_procedure);
     timeline.push(vibration_check);
-    //push tactile block
-    for(var i = 0; i<tactile_block.length; i++)
+    if(CONTRA_BALANCE === 0)
     {
-        timeline.push(tactile_block[i]);
+        push_auditory();
+        push_tactile();
+    }
+    else {
+        push_tactile();
+        push_auditory();
     }
     timeline.push(finished);
 
     ///----------------------init----------------------///
 
-    jatos.onLoad(function() {
-        jsPsych.init({
-            timeline: timeline,
-        });
+    //init for JATOS
+    // jatos.onLoad(function() {
+    //     jsPsych.init({
+    //         timeline: timeline,
+    //         on_finish: function () {
+    //             var resultJson = JSON.stringify(jsPsych.data.getData());
+    //             jatos.submitResultData(resultJson, jatos.startNextComponent);
+    //         }
+    //     });
+    // });
+
+    //init for github(w/o saving)
+    jsPsych.init({
+        timeline: timeline
     });
 
 </script>
