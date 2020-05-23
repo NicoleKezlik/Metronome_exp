@@ -165,7 +165,7 @@ jsPsych.plugins["function-tap"] = (function() {
         // function to end trial when it is time
         function end_trial() {
             // alert(tap_time);
-            alert(tap_count);
+            // alert(tap_count);
             // stop the audio file if it is playing
             // remove end event listeners if they exist
             if(context !== null){
@@ -183,7 +183,10 @@ jsPsych.plugins["function-tap"] = (function() {
             var trial_data = {
                 "rt": response.rt,
                 "stimulus": trial.stimulus,
-                "button_pressed": response.button
+                "button_pressed": response.button,
+                "time_stamps": tap_time.toString(),
+                "trial_start": start_time,
+                "audio_on": audio_on
             };
 
             // clear the display
@@ -201,6 +204,7 @@ jsPsych.plugins["function-tap"] = (function() {
             startTime = context.currentTime;
             source.start(startTime);
         } else {
+            var audio_on = Date.now();
             audio.play();
         }
 
