@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <title>Metronom2</title>
 <!--    comment jatos for run in github    -->
-    <script src="jatos.js"></script>
+<!--    <script src="jatos.js"></script>-->
     <script src="jspsych-6.0.5/jspsych.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-survey-multi-choice.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-survey-text.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-html-button-response.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-plugin-try.js"></script>
@@ -34,6 +35,7 @@
     current_response = 6;
     train_timeline = [];
     trial_num = 1;
+    exp_completed = 0;
     AUDIO_PATH = "new_sounds/auditory_with_pink";
     TACTILE_PATH = "new_sounds/tactile_with_silence";
     TYPE = ".wav";
@@ -46,12 +48,12 @@
 
 
     //-----saving data-----//
-    // function saveData(name, data){
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
-    //     xhr.setRequestHeader('Content-Type', 'application/json');
-    //     xhr.send(JSON.stringify({filename: name, filedata: data}));
-    // }
+    function saveData(name, data){
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({filename: name, filedata: data}));
+    }
 
     //*****instructions*****//
     var test_stimuli = [
@@ -351,6 +353,35 @@
     all_types_auditory = [first_auditory_200_pink,second_auditory_341,third_auditory_583,forth_auditory_997,fifth_auditory_1704];
     auditory_block = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
     /////////////////////////////////////////////////////////////////////////////////////////////
+    //-----------Questions----------//
+    var free_text_Qs = {
+        type: 'survey-text',
+        questions: [
+            {prompt: "What phone model did you use?"},
+            {prompt: "What headphone/earphone model did you use?"},
+            {prompt: "Age: "},
+            {prompt: "Sex: "},
+            {prompt: "Do you have any experience with musical instruments? How many years?"},
+            {prompt: "Which instrument?"},
+            {prompt: "Do you have any prior experience using metronomes?"},
+            {prompt: "Did you receive any notifications during this last stretch?"},
+            {prompt: "Were there any other problems during the experiment that you would like to report?",rows:5,columns:40}
+        ],
+    };
+
+    var yes_no_options = ["Yes", "No"];
+    var dominant_hand_options = ["right", "left", "other"];
+
+    var multi_choice_block = {
+        type: 'survey-multi-choice',
+        questions: [
+            {prompt: "Did you switch to other applications during the experiment?", options: yes_no_options},
+            {prompt: "Does your phone have a screen protector?", options: yes_no_options},
+            {prompt: "Dominant hand: ", options: dominant_hand_options},
+            {prompt: "Have you been diagnosed with ADHD?",options: yes_no_options}
+        ],
+    };
+    //////////////////////////////////////////////////////////////
 
     function push_auditory() {
         //push auditory block
@@ -368,48 +399,66 @@
         }
     }
 
+    // ----------------- Create random subject ID: ----------------- //
+    const subject_id = Math.floor(Math.random() * 9999999) + 1;
+    jsPsych.data.addProperties({subject_id: subject_id});
+
+    //get the time
+    var date = new Date();
+    month = date.getMonth()+1;
+    day = date.getDate();
+    hour = date.getHours();
+    minutes = date.getMinutes();
+    seconds = date.getSeconds();
+    full_time = day.toString()+"/"+month.toString()+" ; "+hour.toString()+":"+minutes.toString()+":"+seconds.toString();
+    jsPsych.data.addProperties({date:full_time});
+
 
     ///-------------------time line-------------------///
     var timeline = [];
-    timeline.push(instruction_procedure);
+    // timeline.push(instruction_procedure);
     timeline.push(train_begin);
-    timeline.push(loop_node3);
-    if(CONTRA_BALANCE === 0)
-    {
-        push_auditory();
-        push_tactile();
-    }
-    else {
-        push_tactile();
-        push_auditory();
-    }
+    // timeline.push(loop_node3);
+    // if(CONTRA_BALANCE === 0)
+    // {
+    //     push_auditory();
+    //     push_tactile();
+    // }
+    // else {
+    //     push_tactile();
+    //     push_auditory();
+    // }
+    timeline.push(multi_choice_block);
+    timeline.push(free_text_Qs);
     timeline.push(finished);
 
     ///----------------------init----------------------///
 
     // init for JATOS
-    jatos.onLoad(function() {
-        jsPsych.init({
-            timeline: timeline,
-            preload_audio: audio,
-            on_finish: function () {
-                jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now()});
-                var resultJson = jsPsych.data.get().json();
-                jatos.submitResultData(resultJson, jatos.startNextComponent);
-                jsPsych.endExperiment('The experiment was ended by pressing N.');
-            }
-        });
-    });
+    // jatos.onLoad(function() {
+    //     jsPsych.init({
+    //         timeline: timeline,
+    //         preload_audio: audio,
+    //         on_finish: function () {
+    //                 exp_complited = 1;
+    //             jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
+    //             var resultJson = jsPsych.data.get().json();
+    //             jatos.submitResultData(resultJson, jatos.startNextComponent);
+    //             jsPsych.endExperiment('The experiment was ended by pressing N.');
+    //         }
+    //     });
+    // });
 
     // init for github(w/o saving)
-    // jsPsych.init({
-    //     timeline: timeline,
-    //     preload_audio: audio,
-    //     on_finish: function () {
-    //         jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now()});
-    //         saveData(10, jsPsych.data.get().csv());
-    //     }
-    // });
+    jsPsych.init({
+        timeline: timeline,
+        preload_audio: audio,
+        on_finish: function () {
+            exp_completed = 1;
+            jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
+            saveData(subject_id, jsPsych.data.get().csv());
+        }
+    });
 
 </script>
 </body>
