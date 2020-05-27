@@ -30,11 +30,12 @@
     TIME_BEFORE_VIBRATE_IN_MS = 1000;  // a second
     VIBRATION_LENGTH = 70;
     NUM_STIMULI_TRIAL = 30;
+    NUM_STIMULI_TRAIN = 5;
     CONTRA_BALANCE = Math.round(Math.random()); // 0 auditory block is first, 1 tactile block is first
     tactile_train_success = 0;
     current_response = 6;
     train_timeline = [];
-    trial_num = 1;
+    // trial_num = 1;
     exp_completed = 0;
     AUDIO_PATH = "new_sounds/auditory_with_pink";
     TACTILE_PATH = "new_sounds/tactile_with_silence";
@@ -48,12 +49,12 @@
 
 
     //-----saving data-----//
-    function saveData(name, data){
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify({filename: name, filedata: data}));
-    }
+    // function saveData(name, data){
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
+    //     xhr.setRequestHeader('Content-Type', 'application/json');
+    //     xhr.send(JSON.stringify({filename: name, filedata: data}));
+    // }
 
     //*****instructions*****//
     var test_stimuli = [
@@ -76,7 +77,6 @@
         timeline: [instruction],
         timeline_variables: test_stimuli,
         on_start: function () {
-            alert("exp_start");
             jsPsych.data.addProperties({exp_start:Date.now()});
         }
     };
@@ -101,7 +101,7 @@
     };
     /////////////////////////////////////////
 
-    //---------training----------//
+    //---------adjusting and checking----------//
     var third_tempo_583_train_6_vibes = {
         type: 'function-tap',
         stimulus: 'new_sounds/tactile_with_silence3.wav',
@@ -184,6 +184,114 @@
             return responses!==4;
         }
     };
+
+    //---------training---------//
+    function create_vibration_tempo_arrays_train() {
+        tempos_arrays_train = [];
+        for(var i=0; i<TEMPOS_IN_MS.length; i++)
+        {
+            tempo_array_train = [];
+            tempo_array_train.push(1);
+            tempo_array_train.push(TIME_BEFORE_VIBRATE_IN_MS);
+            for(var j=0; j<NUM_STIMULI_TRAIN; j++)
+            {
+                tempo_array_train.push(VIBRATION_LENGTH);
+                tempo_array_train.push(TEMPOS_IN_MS[i]-VIBRATION_LENGTH);
+            }
+            tempos_arrays_train.push(tempo_array_train);
+        }
+    }
+    create_vibration_tempo_arrays_train();
+    var first_tempo_200_pink_train = {
+        type: 'function-tap',
+        on_start: function () {
+            vib_on = Date.now();
+            // jsPsych.data.addProperties({vibration_on:Date.now()});
+            navigator.vibrate(tempos_arrays_train[0]);
+            // jsPsych.data.addProperties({vibration_off:Date.now()});
+        },
+        stimulus: 'new_sounds/tactile_with_silence1.wav',
+        choices: ['Tap'],
+        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        trial_ends_after_audio: true,
+        data: {modality:'1',practice:'0',trial_tempo:'200'},
+    };
+
+    var second_tempo_341_train = {
+        type: 'function-tap',
+        stimulus: 'new_sounds/tactile_with_silence2.wav',
+        choices: ['Tap'],
+        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        trial_ends_after_audio:true,
+        data: {modality:'1',practice:'0',trial_tempo:'341'},
+        on_start: function () {
+            jsPsych.data.addProperties({vibration_on:Date.now()});
+            navigator.vibrate(tempos_arrays_train[1]);
+            jsPsych.data.addProperties({vibration_off:Date.now()});
+        }
+    };
+
+    var third_tempo_583_train = {
+        type: 'function-tap',
+        stimulus: 'new_sounds/tactile_with_silence3.wav',
+        choices: ['Tap'],
+        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        trial_ends_after_audio:true,
+        data: {modality:'1',practice:'0',trial_tempo:'583'},
+        on_start: function () {
+            // jsPsych.data.addProperties({vibration_on:Date.now()});
+            navigator.vibrate(tempos_arrays_train[2]);
+            // jsPsych.data.addProperties({vibration_off:Date.now()});
+        }
+    };
+
+    var forth_tempo_997_train = {
+        type: 'function-tap',
+        stimulus: 'new_sounds/tactile_with_silence4.wav',
+        choices: ['Tap'],
+        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        trial_ends_after_audio:true,
+        data: {modality:'1',practice:'0',trial_tempo:'997'},
+        on_start: function () {
+            // jsPsych.data.addProperties({vibration_on:Date.now()});
+            navigator.vibrate(tempos_arrays_train[3]);
+            // jsPsych.data.addProperties({vibration_off:Date.now()});
+        }
+    };
+
+    var fifth_tempo_1704_train = {
+        type: 'function-tap',
+        stimulus: 'new_sounds/tactile_with_silence5.wav',
+        choices: ['Tap'],
+        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        trial_ends_after_audio:true,
+        data: {modality:'1',practice:'0',trial_tempo:'1704'},
+        on_start: function () {
+            // jsPsych.data.addProperties({vibration_on:Date.now()});
+            navigator.vibrate(tempos_arrays_train[4]);
+            // jsPsych.data.addProperties({vibration_off:Date.now()});
+        }
+    };
+
+    all_types_tactile_train = [first_tempo_200_pink_train];
+    // all_types_tactile_train = [first_tempo_200_pink_train,second_tempo_341_train,third_tempo_583_train,forth_tempo_997_train,fifth_tempo_1704_train];
+    tactile_block_train = jsPsych.randomization.repeat(all_types_tactile_train,1);
+
+    var loop_node_train = {
+        timeline: tactile_block_train,
+        loop_function: function(data){
+            var data = jsPsych.data.getLastTrialData();
+            var jsonData = data.json();
+            jsonData = JSON.parse(jsonData);
+            alert(jsonData[0].time_stamps);
+            var responses = JSON.parse(jsonData[0].button_pressed);
+            if(responses===0)
+            {
+                alert("please make sure your phone is not muted")
+            }
+            return responses!==4;
+        }
+    };
     /////////////////////////////////////////
 
     //*******tactile block********//
@@ -217,7 +325,7 @@
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
         trial_ends_after_audio: true,
-        data: {trial_num:trial_num,modality:'1',practice:'0',trial_tempo:'200'},
+        data: {modality:'1',practice:'0',trial_tempo:'200'},
     };
 
     var second_tempo_341 = {
@@ -226,7 +334,7 @@
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
         trial_ends_after_audio:true,
-        data: {trial_num:trial_num,modality:'1',practice:'0',trial_tempo:'341'},
+        data: {modality:'1',practice:'0',trial_tempo:'341'},
         on_start: function () {
             jsPsych.data.addProperties({vibration_on:Date.now()});
             navigator.vibrate(tempos_arrays[1]);
@@ -240,7 +348,7 @@
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
         trial_ends_after_audio:true,
-        data: {trial_num:trial_num,modality:'1',practice:'0',trial_tempo:'583'},
+        data: {modality:'1',practice:'0',trial_tempo:'583'},
         on_start: function () {
             jsPsych.data.addProperties({vibration_on:Date.now()});
             navigator.vibrate(tempos_arrays[2]);
@@ -254,7 +362,7 @@
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
         trial_ends_after_audio:true,
-        data: {trial_num:trial_num,modality:'1',practice:'0',trial_tempo:'997'},
+        data: {modality:'1',practice:'0',trial_tempo:'997'},
         on_start: function () {
             jsPsych.data.addProperties({vibration_on:Date.now()});
             navigator.vibrate(tempos_arrays[3]);
@@ -268,7 +376,7 @@
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
         trial_ends_after_audio:true,
-        data: {trial_num:trial_num,modality:'1',practice:'0',trial_tempo:'1704'},
+        data: {modality:'1',practice:'0',trial_tempo:'1704'},
         on_start: function () {
             jsPsych.data.addProperties({vibration_on:Date.now()});
             navigator.vibrate(tempos_arrays[4]);
@@ -287,11 +395,11 @@
         type: 'function-tap',
         stimulus: 'new_sounds/auditory_with_pink1.wav',
         choices: ['Tap'],
-        data: {trial_num:trial_num,modality:'0',practice:'0',trial_tempo:'200'},
+        data: {modality:'0',practice:'0',trial_tempo:'200'},
         prompt: "<p>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio: true,
         on_finish: function () {
-            trial_num++;
+            // trial_num++;
         },
         on_start:function () {
             // alert(trial_num);
@@ -302,11 +410,11 @@
         type: 'function-tap',
         stimulus: 'new_sounds/auditory_with_pink2.wav',
         choices: ['Tap'],
-        data: {trial_num:trial_num,modality:'0',practice:'0',trial_tempo:'341'},
+        data: {modality:'0',practice:'0',trial_tempo:'341'},
         prompt: "<p>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio: true,
         on_finish: function () {
-            trial_num++;
+            // trial_num++;
         },
         on_start:function () {
             // alert(trial_num);
@@ -317,7 +425,7 @@
         type: 'function-tap',
         stimulus: 'new_sounds/auditory_with_pink3.wav',
         choices: ['Tap'],
-        data: {trial_num:trial_num,modality:'0',practice:'0',trial_tempo:'583'},
+        data: {modality:'0',practice:'0',trial_tempo:'583'},
         prompt: "<p>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio: true,
         on_finish: function () {
@@ -329,7 +437,7 @@
         type: 'function-tap',
         stimulus: 'new_sounds/auditory_with_pink4.wav',
         choices: ['Tap'],
-        data: {trial_num:trial_num,modality:'0',practice:'0',trial_tempo:'997'},
+        data: {modality:'0',practice:'0',trial_tempo:'997'},
         prompt: "<p>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio: true,
         on_finish: function () {
@@ -341,7 +449,7 @@
         type: 'function-tap',
         stimulus: 'new_sounds/auditory_with_pink5.wav',
         choices: ['Tap'],
-        data: {trial_num:trial_num,modality:'0',practice:'0',trial_tempo:'1704'},
+        data: {modality:'0',practice:'0',trial_tempo:'1704'},
         prompt: "<p>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio: true,
         on_finish: function () {
@@ -367,6 +475,16 @@
             {prompt: "Did you receive any notifications during this last stretch?"},
             {prompt: "Were there any other problems during the experiment that you would like to report?",rows:5,columns:40}
         ],
+        on_finish:function () {
+            var data = jsPsych.data.getLastTrialData();
+            var jsonData = data.json();
+            jsonData = JSON.parse(jsonData);
+            var responses = JSON.parse(jsonData[0].responses);
+            jsPsych.data.addProperties({phone_model:responses.Q0,headphone_model:responses.Q1,age:responses.Q2,sex:responses.Q3,
+            musical_experience:responses.Q4,instruments:responses.Q5,metronomes_experience:responses.Q6,notification:responses.Q7,
+            problems:responses.Q8});
+            saveData(subject_id, jsPsych.data.get().csv());
+        }
     };
 
     var yes_no_options = ["Yes", "No"];
@@ -380,6 +498,14 @@
             {prompt: "Dominant hand: ", options: dominant_hand_options},
             {prompt: "Have you been diagnosed with ADHD?",options: yes_no_options}
         ],
+        on_finish: function () {
+            var data = jsPsych.data.getLastTrialData();
+            var jsonData = data.json();
+            jsonData = JSON.parse(jsonData);
+            var responses = JSON.parse(jsonData[0].responses);
+            jsPsych.data.addProperties({switch_application:responses.Q0,screen_protector:responses.Q1,dominant_hand:responses.Q2,adhd:responses.Q3});
+            saveData(subject_id, jsPsych.data.get().csv());
+        }
     };
     //////////////////////////////////////////////////////////////
 
@@ -416,18 +542,19 @@
 
     ///-------------------time line-------------------///
     var timeline = [];
-    // timeline.push(instruction_procedure);
+    timeline.push(instruction_procedure);
     timeline.push(train_begin);
+    // timeline.push(loop_node_train);
     // timeline.push(loop_node3);
-    // if(CONTRA_BALANCE === 0)
-    // {
-    //     push_auditory();
-    //     push_tactile();
-    // }
-    // else {
-    //     push_tactile();
-    //     push_auditory();
-    // }
+    if(CONTRA_BALANCE === 0)
+    {
+        push_auditory();
+        push_tactile();
+    }
+    else {
+        push_tactile();
+        push_auditory();
+    }
     timeline.push(multi_choice_block);
     timeline.push(free_text_Qs);
     timeline.push(finished);

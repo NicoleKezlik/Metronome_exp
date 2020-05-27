@@ -176,6 +176,7 @@ jsPsych.plugins["function-tap"] = (function() {
                 audio.removeEventListener('ended', end_trial);
             }
 
+            var end_trial_time = Date.now();
             // kill any remaining setTimeout handlers
             jsPsych.pluginAPI.clearAllTimeouts();
 
@@ -186,7 +187,7 @@ jsPsych.plugins["function-tap"] = (function() {
                 "button_pressed": response.button,
                 "time_stamps": tap_time.toString(),
                 "trial_start": start_time,
-                "audio_on": audio_on
+                "trial_end": end_trial_time
             };
 
             // clear the display
@@ -204,7 +205,6 @@ jsPsych.plugins["function-tap"] = (function() {
             startTime = context.currentTime;
             source.start(startTime);
         } else {
-            var audio_on = Date.now();
             audio.play();
         }
 
