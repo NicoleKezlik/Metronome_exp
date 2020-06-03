@@ -7,6 +7,7 @@
 <!--    <script src="jatos.js"></script>-->
     <script src="jspsych-6.0.5/jspsych.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+    <script src="jspsych-6.0.5/plugins/jspsych-image-button-response.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-survey-multi-choice.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-survey-text.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-html-button-response.js"></script>
@@ -19,7 +20,7 @@
         text-align: center;
         top: 10%;
         left: 20%;
-        font-size: 80px;
+        font-size: 4vw;
     }
 </style>
 <body>
@@ -32,11 +33,12 @@
     NUM_STIMULI_TRIAL = 30;
     NUM_STIMULI_TRAIN = 5;
     CONTRA_BALANCE = Math.round(Math.random()); // 0 auditory block is first, 1 tactile block is first
-    tactile_train_success = 0;
-    current_response = 6;
-    train_timeline = [];
+    var tactile_train_success = 0;
+    var current_response = 6;
+    var train_timeline = [];
+    var vibration_start = 0;
     // trial_num = 1;
-    exp_completed = 0;
+    var exp_completed = 0;
     AUDIO_PATH = "new_sounds/auditory_with_pink";
     TACTILE_PATH = "new_sounds/tactile_with_silence";
     TYPE = ".wav";
@@ -49,18 +51,20 @@
 
 
     //-----saving data-----//
-    // function saveData(name, data){
-    //     var xhr = new XMLHttpRequest();
-    //     xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
-    //     xhr.setRequestHeader('Content-Type', 'application/json');
-    //     xhr.send(JSON.stringify({filename: name, filedata: data}));
-    // }
+    function saveData(name, data){
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({filename: name, filedata: data}));
+    }
 
     //*****instructions*****//
     var test_stimuli = [
-        {stimulus: '<h3 class="instruction">שלום!!, ברוך הבא לניסוי שלנו</h3><p class="instruction">אנא חבר אוזניות </p><p class="instruction"> כדי לשמוע את ההוראות</p>'},
-        {stimulus: '<p class="instruction">אורך הניסוי הוא כ-20 דקות  </p><p class="instruction"> אנא שב במקום נוח</p>'},
-        {stimulus: '<p class="instruction">שב במקום שקט וללא הפרעות</p><br><br><br>'},
+        {stimulus: '<h3 class="instruction">Hello and welcome to our experiment</h3><p class="instruction">Please follow the instructions carefully </p><p class="instruction">This experiment is approx. 20 min long. </p><p class="instruction">This experiment is to be completed to the end with <b>no breaks</b>.\n' +
+                '</p><p class="instruction">When you are ready to proceed, press “continue”</p>'},
+        {stimulus: '<p class="instruction">Please take a few seconds to</p><p class="instruction">close any applications that</p><p class="instruction">may be running in the background</p>'},
+        {stimulus: '<p class="instruction">The experiment will last approx.20 min,</p><p class="instruction">please make sure you are sitting comfortably.</p>'},
+        {stimulus: '<p class="instruction">Please make sure you are sitting</p><p class="instruction">in a quiet area with no disturbances</p>'},
         {stimulus: '<p class="instruction">הוצא את הטלפון </p><p class="instruction">מהכיסוי (קייס)</p>'},
         {stimulus: '<p class="instruction">.החזק את הטלפון ביד החזקה</p><p class="instruction"> אל תחליף ידיים לאורך הניסוי</p>'},
         {stimulus: '<p class="instruction">אנא חבר אוזניות, וודא שהן</p><p class="instruction">יושבות בנוחות בשתי אוזנייך</p>'},
@@ -71,7 +75,7 @@
     var instruction = {
         type: "html-button-response",
         stimulus: jsPsych.timelineVariable('stimulus'),
-        choices: ['המשך']
+        choices: ['continue']
     };
     var instruction_procedure = {
         timeline: [instruction],
@@ -88,10 +92,12 @@
     };
 
     var volume_configuration = {
-        type: 'image-button-response',
-        stimulus: 'img/happy_face_1.png',
-        choices: ['continue',],
-        prompt: "<p>במהלך הניסוי יישמע רעש רקע.</p><p>יש לשים את הווליום בערך באמצע</p>"
+        type: 'html-button-response',
+        stimulus: "<h3>Volume Adjustment</h3><p>During the experiment there will be </p><p>background noise. Let's adjust the </p><p>volume to a level that will be comfortable" +
+            "</p><p>for you.</p><br><p>Please adjust your volume to the center</p><p>of your sound bar" +
+            "</p><img src='images/volume_middle_horizontal.png'><br>",
+        choices: ['continue'],
+        // prompt: "<p>במהלך הניסוי יישמע רעש רקע.</p><p>יש לשים את הווליום בערך באמצע</p>"
     };
 
     var finished = {
@@ -205,8 +211,9 @@
     var first_tempo_200_pink_train = {
         type: 'function-tap',
         on_start: function () {
-            vib_on = Date.now();
+            var event = new Event('build');
             // jsPsych.data.addProperties({vibration_on:Date.now()});
+            vibration_start = event.timeStamp;
             navigator.vibrate(tempos_arrays_train[0]);
             // jsPsych.data.addProperties({vibration_off:Date.now()});
         },
@@ -277,19 +284,60 @@
     // all_types_tactile_train = [first_tempo_200_pink_train,second_tempo_341_train,third_tempo_583_train,forth_tempo_997_train,fifth_tempo_1704_train];
     tactile_block_train = jsPsych.randomization.repeat(all_types_tactile_train,1);
 
+    function create_array_stamps(time_stamps) {
+        //parsing from string to array of floats
+        var array_stamps = [];
+        var idx = time_stamps.indexOf(",");
+        while (idx !== -1)
+        {
+            // alert(time_stamps.substring(0,idx));
+            array_stamps.push(parseFloat(time_stamps.substring(0 , idx)));
+            time_stamps = time_stamps.substring(idx+1);
+            idx = time_stamps.indexOf(",");
+        }
+        return array_stamps;
+    }
+    function get_average_interval(array_stamps)
+    {
+        //calculate average interval
+        var avg = 0;
+        for(var i = 0; i < array_stamps.length-1; i++)
+        {
+            avg += array_stamps[i+1]-array_stamps[i];
+            // alert(avg);
+        }
+        avg = avg/array_stamps.length;
+        // alert(avg);
+        return avg;
+    }
+
     var loop_node_train = {
         timeline: tactile_block_train,
         loop_function: function(data){
             var data = jsPsych.data.getLastTrialData();
             var jsonData = data.json();
             jsonData = JSON.parse(jsonData);
-            alert(jsonData[0].time_stamps);
-            var responses = JSON.parse(jsonData[0].button_pressed);
-            if(responses===0)
+            var time_stamps = jsonData[0].time_stamps;
+            var array_stamps = create_array_stamps(time_stamps);
+            // alert(array_stamps);
+            var avg = get_average_interval(array_stamps);
+            // alert(avg);
+            // alert(Math.abs(array_stamps[0]-vibration_start));
+            if(Math.abs(array_stamps[0]-vibration_start > 1000))
             {
-                alert("please make sure your phone is not muted")
+                alert("Please try to start tapping earlier in the trial");
+                return true;
             }
-            return responses!==4;
+            else if(avg - 200 > 30)
+            {
+                alert("Please try to match the beat");
+                return true;
+            }
+            else
+            {
+                alert("Excellent!");
+                return false;
+            }
         }
     };
     /////////////////////////////////////////
@@ -542,21 +590,22 @@
 
     ///-------------------time line-------------------///
     var timeline = [];
+    timeline.push(volume_configuration);
     timeline.push(instruction_procedure);
     timeline.push(train_begin);
-    // timeline.push(loop_node_train);
+    timeline.push(loop_node_train);
     // timeline.push(loop_node3);
-    if(CONTRA_BALANCE === 0)
-    {
-        push_auditory();
-        push_tactile();
-    }
-    else {
-        push_tactile();
-        push_auditory();
-    }
-    timeline.push(multi_choice_block);
-    timeline.push(free_text_Qs);
+    // if(CONTRA_BALANCE === 0)
+    // {
+    //     push_auditory();
+    //     push_tactile();
+    // }
+    // else {
+    //     push_tactile();
+    //     push_auditory();
+    // }
+    // timeline.push(multi_choice_block);
+    // timeline.push(free_text_Qs);
     timeline.push(finished);
 
     ///----------------------init----------------------///
