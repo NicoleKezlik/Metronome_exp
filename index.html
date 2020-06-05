@@ -38,6 +38,7 @@
 
     //TODO add timestamp to the auditory trails to the on_start. change to 2000 milliseconds from begging of trial.
     //create loops for auditory.  change randomization to include all before second round(in actual trial). finish instruction
+    //not finish volume configuration on first button press
 
     /*****CONSTANTS****/
     TEMPOS_IN_MS = [200,341,583,997,1704];
@@ -48,9 +49,8 @@
     CONTRA_BALANCE = Math.round(Math.random()); // 0 auditory block is first, 1 tactile block is first
     var tactile_train_success = 0;
     var current_response = 6;
-    var vibration_start = 0;
-    var vibration_tempo = 0;
-    // trial_num = 1;
+    var tempo_start = 0;
+    var tempo = 0;
     var exp_completed = 0;
     AUDIO_PATH = "new_sounds/auditory_with_pink";
     TACTILE_PATH = "new_sounds/tactile_with_silence";
@@ -78,12 +78,13 @@
         {stimulus: '<p class="instruction">Please take a few seconds to</p><p class="instruction">close any applications that</p><p class="instruction">may be running in the background</p>'},
         {stimulus: '<p class="instruction">The experiment will last approx.20 min,</p><p class="instruction">please make sure you are sitting comfortably.</p>'},
         {stimulus: '<p class="instruction">Please make sure you are sitting</p><p class="instruction">in a quiet area with no disturbances</p>'},
-        {stimulus: '<p class="instruction">הוצא את הטלפון </p><p class="instruction">מהכיסוי (קייס)</p>'},
-        {stimulus: '<p class="instruction">.החזק את הטלפון ביד החזקה</p><p class="instruction"> אל תחליף ידיים לאורך הניסוי</p>'},
-        {stimulus: '<p class="instruction">אנא חבר אוזניות, וודא שהן</p><p class="instruction">יושבות בנוחות בשתי אוזנייך</p>'},
-        {stimulus: '<p class="instruction">שים את הפלאפון במצב</p><p class="instruction">(לא במצב שקט)רעש</p>'},
-        {stimulus: '<p class="instruction">שים את הפלאפון על ווליום </p><p class="instruction">הכי גבוה/אמצע</p>'},
-        {stimulus: '<p class="instruction">אנא צא מכל האפליקציות </p><p class="instruction">הרקע האחרות</p>'}
+        {stimulus: '<p class="instruction">Please remove your phone’s protective  </p><p class="instruction">case (if you have one)</p>'},
+        {stimulus: '<p class="instruction">Please hold your phone in your non-dominant hand. It is recommended</p><p class="instruction">that you extend your arm. You can support your</p><p ' +
+                'class="instruction">elbow on an arm rest of place your hand on a soft surface. Please do not</p><p class="instruction"> switch hands for the duration of the experiment</p>'},
+        {stimulus: '<p class="instruction">Please connect a set of headphones/earphones and make</p><p class="instruction">sure they are sitting comfortably in both ears</p>'},
+        {stimulus: '<p class="instruction">Please make sure your phone is on sound</p><p class="instruction"> (NOT on silent mode\\vibrate-only\\’do not disturb’)</p>'},
+        {stimulus: '<p class="instruction">Please set your phone’s volume to the middle of the sound bar </p>'},
+        // {stimulus: '<p class="instruction">אנא צא מכל האפליקציות </p><p class="instruction">הרקע האחרות</p>'}
     ];
     var instruction = {
         type: "html-button-response",
@@ -253,6 +254,11 @@
     function create_array_stamps(time_stamps) {
         //parsing from string to array of floats
         var array_stamps = [];
+        if(time_stamps === "")
+        {
+            array_stamps.push(tempo_start+3000); //try tapping earlier - if no tap
+            // alert("yap");
+        }
         var idx = time_stamps.indexOf(",");
         while (idx !== -1)
         {
@@ -286,12 +292,12 @@
 
 
     function check_train_loop(first_stamp,avg) {
-        if(Math.abs(first_stamp-vibration_start > 1000))
+        if(Math.abs(first_stamp-tempo_start > 2000))
         {
             alert("Please try to start tapping earlier in the trial");
             return true;
         }
-        else if(avg - vibration_tempo > 30)
+        else if(avg - tempo > 30)
         {
             alert("Please try to match the beat");
             return true;
@@ -327,9 +333,9 @@
         type: 'function-tap',
         on_start: function () {
             var event = new Event('build');
-            vibration_start = event.timeStamp;
+            tempo_start = event.timeStamp;
             vibration_200_start = event.timeStamp;
-            vibration_tempo = 200;
+            tempo = 200;
             navigator.vibrate(tempos_arrays[0]);
         },
         stimulus: 'new_sounds/tactile_with_silence1.wav',
@@ -348,9 +354,9 @@
         data: {modality:'1',practice:'0',trial_tempo:'341'},
         on_start: function () {
             var event = new Event('build');
-            vibration_start = event.timeStamp;
+            tempo_start = event.timeStamp;
             vibration_341_start = event.timeStamp;
-            vibration_tempo = 341;
+            tempo = 341;
             navigator.vibrate(tempos_arrays[1]);
         }
     };
@@ -364,9 +370,9 @@
         data: {modality:'1',practice:'0',trial_tempo:'583'},
         on_start: function () {
             var event = new Event('build');
-            vibration_start = event.timeStamp;
+            tempo_start = event.timeStamp;
             vibration_583_start = event.timeStamp;
-            vibration_tempo = 583;
+            tempo = 583;
             navigator.vibrate(tempos_arrays[2]);
         }
     };
@@ -380,9 +386,9 @@
         data: {modality:'1',practice:'0',trial_tempo:'997'},
         on_start: function () {
             var event = new Event('build');
-            vibration_start = event.timeStamp;
+            tempo_start = event.timeStamp;
             vibration_997_start = event.timeStamp;
-            vibration_tempo = 997;
+            tempo = 997;
             navigator.vibrate(tempos_arrays[3]);
         }
     };
@@ -396,9 +402,9 @@
         data: {modality:'1',practice:'0',trial_tempo:'1704'},
         on_start: function () {
             var event = new Event('build');
-            vibration_start = event.timeStamp;
+            tempo_start = event.timeStamp;
             vibration_1704_start = event.timeStamp;
-            vibration_tempo = 1704;
+            tempo = 1704;
             navigator.vibrate(tempos_arrays[4]);
         }
     };
@@ -417,11 +423,10 @@
         data: {modality:'0',practice:'0',trial_tempo:'200'},
         prompt: "<p>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio: true,
-        on_finish: function () {
-            // trial_num++;
-        },
         on_start:function () {
-            // alert(trial_num);
+            var event = new Event('build');
+            tempo_start = event.timeStamp;
+            tempo = 200;
         }
     };
 
@@ -432,11 +437,10 @@
         data: {modality:'0',practice:'0',trial_tempo:'341'},
         prompt: "<p>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio: true,
-        on_finish: function () {
-            // trial_num++;
-        },
         on_start:function () {
-            // alert(trial_num);
+            var event = new Event('build');
+            tempo_start = event.timeStamp;
+            tempo = 341;
         }
     };
 
@@ -447,8 +451,10 @@
         data: {modality:'0',practice:'0',trial_tempo:'583'},
         prompt: "<p>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio: true,
-        on_finish: function () {
-            // trial_num++;
+        on_start: function () {
+            var event = new Event('build');
+            tempo_start = event.timeStamp;
+            tempo = 583;
         }
     };
 
@@ -459,8 +465,10 @@
         data: {modality:'0',practice:'0',trial_tempo:'997'},
         prompt: "<p>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio: true,
-        on_finish: function () {
-            // trial_num++;
+        on_start: function () {
+            var event = new Event('build');
+            tempo_start = event.timeStamp;
+            tempo = 997;
         }
     };
 
@@ -471,8 +479,10 @@
         data: {modality:'0',practice:'0',trial_tempo:'1704'},
         prompt: "<p>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio: true,
-        on_finish: function () {
-            // trial_num++;
+        on_start: function () {
+            var event = new Event('build');
+            tempo_start = event.timeStamp;
+            tempo = 1704;
         }
     };
 
@@ -482,20 +492,16 @@
     /////////////////////////////////////////////////////////////////////////////////////////////
 
     //---------loop training----------//
-    var loop_train_200 = {
+    var loop_train_200_tactile = {
         timeline: [first_tempo_200_pink],
         loop_function: function (data) {
-            var data = jsPsych.data.getLastTrialData();
-            var jsonData = data.json();
-            jsonData = JSON.parse(jsonData);
-            var time_stamps = jsonData[0].time_stamps;
-            // var time_stamps = read_time_stamps_from_data();
+            var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
             return check_train_loop(array_stamps[0],avg);
         }
     };
-    var loop_train_341 = {
+    var loop_train_341_tactile = {
         timeline: [second_tempo_341],
         loop_function: function (data) {
             var time_stamps = read_time_stamps_from_data();
@@ -504,7 +510,7 @@
             return check_train_loop(array_stamps[0],avg);
         }
     };
-    var loop_train_583 = {
+    var loop_train_583_tactile = {
         timeline: [third_tempo_583],
         loop_function: function (data) {
             var time_stamps = read_time_stamps_from_data();
@@ -513,7 +519,7 @@
             return check_train_loop(array_stamps[0],avg);
         }
     };
-    var loop_train_997 = {
+    var loop_train_997_tactile = {
         timeline: [forth_tempo_997],
         loop_function: function (data) {
             var time_stamps = read_time_stamps_from_data();
@@ -522,7 +528,7 @@
             return check_train_loop(array_stamps[0],avg);
         }
     };
-    var loop_train_1704 = {
+    var loop_train_1704_tactile = {
         timeline: [fifth_tempo_1704],
         loop_function: function (data) {
             var time_stamps = read_time_stamps_from_data();
@@ -532,8 +538,64 @@
         }
     };
 
-    all_types_tactile_train = [loop_train_200,loop_train_341,loop_train_583,loop_train_997,loop_train_1704];
-    tactile_block_train = jsPsych.randomization.repeat(all_types_tactile,1);
+    var loop_train_200_auditory = {
+        timeline: [first_tempo_200_pink],
+        loop_function: function (data) {
+            var time_stamps = read_time_stamps_from_data();
+            var array_stamps = create_array_stamps(time_stamps);
+            var avg = get_average_interval(array_stamps);
+            return check_train_loop(array_stamps[0],avg);
+        }
+    };
+    var loop_train_341_auditory = {
+        timeline: [second_tempo_341],
+        loop_function: function (data) {
+            var time_stamps = read_time_stamps_from_data();
+            var array_stamps = create_array_stamps(time_stamps);
+            var avg = get_average_interval(array_stamps);
+            return check_train_loop(array_stamps[0],avg);
+        }
+    };
+    var loop_train_583_auditory = {
+        timeline: [third_tempo_583],
+        loop_function: function (data) {
+            var time_stamps = read_time_stamps_from_data();
+            var array_stamps = create_array_stamps(time_stamps);
+            var avg = get_average_interval(array_stamps);
+            return check_train_loop(array_stamps[0],avg);
+        }
+    };
+    var loop_train_997_auditory = {
+        timeline: [forth_tempo_997],
+        loop_function: function (data) {
+            var time_stamps = read_time_stamps_from_data();
+            var array_stamps = create_array_stamps(time_stamps);
+            var avg = get_average_interval(array_stamps);
+            return check_train_loop(array_stamps[0],avg);
+        }
+    };
+    var loop_train_1704_auditory = {
+        timeline: [fifth_tempo_1704],
+        loop_function: function (data) {
+            var time_stamps = read_time_stamps_from_data();
+            var array_stamps = create_array_stamps(time_stamps);
+            var avg = get_average_interval(array_stamps);
+            return check_train_loop(array_stamps[0],avg);
+        }
+    };
+
+    // all_types_auditory_train = [loop_train_200_auditory];
+    all_types_auditory_train = [loop_train_200_auditory,loop_train_341_auditory,loop_train_583_auditory,loop_train_997_auditory,loop_train_1704_auditory];
+    auditory_block_train = jsPsych.randomization.repeat(all_types_auditory_train,1);
+    function push_auditory_train() {
+        for(var i = 0; i < auditory_block_train.length; i++)
+        {
+            timeline.push(auditory_block_train[i]);
+        }
+    }
+
+    all_types_tactile_train = [loop_train_200_tactile,loop_train_341_tactile,loop_train_583_tactile,loop_train_997_tactile,loop_train_1704_tactile];
+    tactile_block_train = jsPsych.randomization.repeat(all_types_tactile_train,1);
     function push_tactile_train() {
         for(var i = 0; i < tactile_block_train.length; i++)
         {
@@ -623,27 +685,37 @@
 
     ///-------------------time line-------------------///
     var timeline = [];
-    // timeline.push(instruction_procedure);
+    timeline.push(instruction_procedure);
     //קריינות
     // timeline.push(loop_node3);
     // timeline.push(volume_configuration_instruction);
     // timeline.push(volume_configuration);
-    // timeline.push(form_trial);
-    timeline.push(start_train_instruction);
-    push_tactile_train();
-    // timeline.push(end_train_instruction);
-    //קריינות?
-    // timeline.push(loop_node_train);
-    timeline.push(end_train_instruction);
+    timeline.push(form_trial);
     if(CONTRA_BALANCE === 0)
     {
+        timeline.push(start_train_instruction);
+        //קריינות?
+        push_auditory_train();
+        timeline.push(end_train_instruction);
         push_auditory();
         timeline.push(between_blocks_to_tactile);
+        timeline.push(start_train_instruction);
+        //קריינות?
+        push_tactile_train();
+        timeline.push(end_train_instruction);
         push_tactile();
     }
     else {
+        timeline.push(start_train_instruction);
+        //קריינות?
+        push_tactile_train();
+        timeline.push(end_train_instruction);
         push_tactile();
         timeline.push(between_blocks_to_auditory);
+        timeline.push(start_train_instruction);
+        //קריינות?
+        push_auditory_train();
+        timeline.push(end_train_instruction);
         push_auditory();
     }
     timeline.push(exp_to_form);
