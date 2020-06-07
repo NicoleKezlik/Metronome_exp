@@ -161,6 +161,11 @@
         type: 'html-button-response',
         stimulus: '<p class="instruction">You have finished</p><p class="instruction"> the experiment</p><br><p class="instruction">Thank you</p>',
         choices: ['Continue'],
+		on_finish: function(){
+			exp_completed = 1;
+            jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
+            saveData(subject_id, jsPsych.data.get().csv());
+		}
     };
     /////////////////////////////////////////
 
@@ -683,12 +688,12 @@
 
     ///-------------------time line-------------------///
     var timeline = [];
-    // timeline.push(instruction_procedure);
+    timeline.push(instruction_procedure);
     //קריינות
-    // timeline.push(loop_node3);
-    // timeline.push(volume_configuration_instruction);
-    // timeline.push(volume_configuration);
-    // timeline.push(form_trial);
+    timeline.push(loop_node3);
+    timeline.push(volume_configuration_instruction);
+    timeline.push(volume_configuration);
+    timeline.push(form_trial);
     if(CONTRA_BALANCE === 0)
     {
         timeline.push(start_train_instruction);
