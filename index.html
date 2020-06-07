@@ -36,9 +36,7 @@
 <body>
 <script>
 
-    //TODO add timestamp to the auditory trails to the on_start. change to 2000 milliseconds from begging of trial.
-    //create loops for auditory.  change randomization to include all before second round(in actual trial). finish instruction
-    //not finish volume configuration on first button press
+    //TODO change randomization to include all before second round(in actual trial)
 
     /*****CONSTANTS****/
     TEMPOS_IN_MS = [200,341,583,997,1704];
@@ -539,7 +537,7 @@
     };
 
     var loop_train_200_auditory = {
-        timeline: [first_tempo_200_pink],
+        timeline: [first_auditory_200_pink],
         loop_function: function (data) {
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
@@ -548,7 +546,7 @@
         }
     };
     var loop_train_341_auditory = {
-        timeline: [second_tempo_341],
+        timeline: [second_auditory_341],
         loop_function: function (data) {
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
@@ -557,7 +555,7 @@
         }
     };
     var loop_train_583_auditory = {
-        timeline: [third_tempo_583],
+        timeline: [third_auditory_583],
         loop_function: function (data) {
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
@@ -566,7 +564,7 @@
         }
     };
     var loop_train_997_auditory = {
-        timeline: [forth_tempo_997],
+        timeline: [forth_auditory_997],
         loop_function: function (data) {
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
@@ -575,7 +573,7 @@
         }
     };
     var loop_train_1704_auditory = {
-        timeline: [fifth_tempo_1704],
+        timeline: [fifth_auditory_1704],
         loop_function: function (data) {
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
@@ -687,9 +685,9 @@
     var timeline = [];
     timeline.push(instruction_procedure);
     //קריינות
-    // timeline.push(loop_node3);
-    // timeline.push(volume_configuration_instruction);
-    // timeline.push(volume_configuration);
+    timeline.push(loop_node3);
+    timeline.push(volume_configuration_instruction);
+    timeline.push(volume_configuration);
     timeline.push(form_trial);
     if(CONTRA_BALANCE === 0)
     {
