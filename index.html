@@ -49,6 +49,9 @@
     var current_response = 6;
     var tempo_start = 0;
     var tempo = 0;
+    var train_succeed_in_row = 0;
+    var train_num = 0;
+    var one_correct = false;
     var exp_completed = 0;
     AUDIO_PATH = "new_sounds/auditory_with_pink";
     TACTILE_PATH = "new_sounds/tactile_with_silence";
@@ -125,7 +128,7 @@
 
     var start_train_instruction = {
       type: 'html-button-response',
-      stimulus: '<h3>We will now begin with a short practice</h3><h3>run and then move on to the</h3>' +
+      stimulus: '<h3>Great!</h3><h3>We will now begin with a short practice</h3><h3>run and then move on to the</h3>' +
           '<h3>experiment</h3>',
         choices: ['continue']
     };
@@ -251,7 +254,21 @@
             return responses!==4;
         }
     };
-
+    //////////////////////////////////////////////
+    //----------------------------------------//
+    var natural_rythom_instruction = {
+      type: 'html-button-response',
+      stimulus: '<h3>We will now ask you to tap regularly at a comfortable tempo.</h3><h3>you will tap for 1 minute.</h3>',
+        choices: ['Ready?']
+    };
+    var natural_rythom = {
+        type: 'function-tap',
+        stimulus: 'new_sounds/tactile_with_silence5.wav',
+        choices: ['Tap'],
+        trial_duration: 60000,
+        // data: {modality:'1',practice:'0',trial_tempo:'200'},
+    };
+    ///////////////////////////////////////////////
     //---------training---------//
 
     function create_array_stamps(time_stamps) {
@@ -294,22 +311,52 @@
     }
 
 
-    function check_train_loop(first_stamp,avg) {
-        if(Math.abs(first_stamp-tempo_start > 2000))
+    function check_train_loop(first_stamp,avg,num_of_taps) {
+        // alert(train_succeed_in_row);
+        train_num++;
+        if(Math.abs(first_stamp-tempo_start) > 1500+(tempo*2))  //not early enough
         {
             alert("Please try to start tapping earlier in the trial");
-            return true;
+            train_succeed_in_row = 0;
         }
-        else if(avg - tempo > 30)
+        else if(num_of_taps < 50)  //not enough taps
         {
             alert("Please try to match the beat");
-            return true;
+            train_succeed_in_row = 0;
         }
         else
         {
             alert("Excellent!");
+            train_succeed_in_row++;
+            one_correct = true;
+        }
+        if(train_num === 5)
+        {
+            if(!one_correct)
+            {
+                // alert("you can not participate");
+                jsPsych.endExperiment("We are sorry, as it seems you're not compatible with our experiment. We thank you for your participation");
+                return false;
+            }
+            else
+            {
+                one_correct = false;
+            }
+        }
+        if(train_num === 6)
+        {
+            if(!one_correct)
+            {
+                // alert("you cant ble ble");
+                jsPsych.endExperiment("We are sorry, as it seems you're not compatible with our experiment. We thank you for your participation");
+            }
             return false;
         }
+        if(train_succeed_in_row === 2)
+        {
+            return false;
+        }
+        return true;
     }
 
     /////////////////////////////////////////
@@ -498,46 +545,61 @@
     var loop_train_200_tactile = {
         timeline: [first_tempo_200_pink],
         loop_function: function (data) {
+            train_num = 0;
+            one_correct = false;
+            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg);
+            return check_train_loop(array_stamps[0],avg,array_stamps.length);
         }
     };
     var loop_train_341_tactile = {
         timeline: [second_tempo_341],
         loop_function: function (data) {
+            train_num = 0;
+            one_correct = false;
+            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg);
+            return check_train_loop(array_stamps[0],avg,array_stamps.length);
         }
     };
     var loop_train_583_tactile = {
         timeline: [third_tempo_583],
         loop_function: function (data) {
+            train_num = 0;
+            one_correct = false;
+            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg);
+            return check_train_loop(array_stamps[0],avg,array_stamps.length);
         }
     };
     var loop_train_997_tactile = {
         timeline: [forth_tempo_997],
         loop_function: function (data) {
+            train_num = 0;
+            one_correct = false;
+            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg);
+            return check_train_loop(array_stamps[0],avg,array_stamps.length);
         }
     };
     var loop_train_1704_tactile = {
         timeline: [fifth_tempo_1704],
         loop_function: function (data) {
+            train_num = 0;
+            one_correct = false;
+            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg);
+            return check_train_loop(array_stamps[0],avg,array_stamps.length);
         }
     };
 
@@ -547,61 +609,81 @@
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg);
+            return check_train_loop(array_stamps[0],avg,array_stamps.length);
+        },
+        on_start: function () {
+            train_num = 0;
+            one_correct = false;
+            train_succeed_in_row = 0;
         }
     };
     var loop_train_341_auditory = {
         timeline: [second_auditory_341],
         loop_function: function (data) {
+            train_num = 0;
+            one_correct = false;
+            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg);
+            return check_train_loop(array_stamps[0],avg,array_stamps.length);
         }
     };
     var loop_train_583_auditory = {
         timeline: [third_auditory_583],
         loop_function: function (data) {
+            train_num = 0;
+            one_correct = false;
+            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg);
+            return check_train_loop(array_stamps[0],avg,array_stamps.length);
         }
     };
     var loop_train_997_auditory = {
         timeline: [forth_auditory_997],
         loop_function: function (data) {
+            train_num = 0;
+            one_correct = false;
+            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg);
+            return check_train_loop(array_stamps[0],avg,array_stamps.length);
         }
     };
     var loop_train_1704_auditory = {
         timeline: [fifth_auditory_1704],
         loop_function: function (data) {
+            train_num = 0;
+            one_correct = false;
+            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg);
+            return check_train_loop(array_stamps[0],avg,array_stamps.length);
         }
     };
 
-    // all_types_auditory_train = [loop_train_200_auditory];
-    all_types_auditory_train = [loop_train_200_auditory,loop_train_341_auditory,loop_train_583_auditory,loop_train_997_auditory,loop_train_1704_auditory];
+    all_types_auditory_train = [loop_train_200_auditory];
+    // all_types_auditory_train = [loop_train_200_auditory,loop_train_341_auditory,loop_train_997_auditory,loop_train_1704_auditory];
     auditory_block_train = jsPsych.randomization.repeat(all_types_auditory_train,1);
     function push_auditory_train() {
         for(var i = 0; i < auditory_block_train.length; i++)
         {
+            // timeline.push(loop_train_583_auditory);
             timeline.push(auditory_block_train[i]);
         }
     }
 
-    all_types_tactile_train = [loop_train_200_tactile,loop_train_341_tactile,loop_train_583_tactile,loop_train_997_tactile,loop_train_1704_tactile];
+    all_types_tactile_train = [loop_train_200_auditory];
+    // all_types_tactile_train = [loop_train_200_tactile,loop_train_341_tactile,loop_train_997_tactile,loop_train_1704_tactile];
     tactile_block_train = jsPsych.randomization.repeat(all_types_tactile_train,1);
     function push_tactile_train() {
         for(var i = 0; i < tactile_block_train.length; i++)
         {
+            // timeline.push(loop_train_583_tactile);
             timeline.push(tactile_block_train[i]);
         }
     }
@@ -694,6 +776,8 @@
     timeline.push(volume_configuration_instruction);
     timeline.push(volume_configuration);
     timeline.push(form_trial);
+    timeline.push(natural_rythom_instruction);
+    timeline.push(natural_rythom);
     if(CONTRA_BALANCE === 0)
     {
         timeline.push(start_train_instruction);
