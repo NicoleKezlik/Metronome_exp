@@ -167,7 +167,7 @@
 		on_finish: function(){
 			exp_completed = 1;
             jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
-            saveData(subject_id, jsPsych.data.get().csv());
+            // saveData(subject_id, jsPsych.data.get().csv());
 		}
     };
     /////////////////////////////////////////
@@ -461,8 +461,18 @@
 
     // all_types_tactile = [first_tempo_200_pink];
     all_types_tactile = [first_tempo_200_pink,second_tempo_341,third_tempo_583,forth_tempo_997,fifth_tempo_1704];
-    // tactile_block = jsPsych.randomization.repeat(all_types,4);
-    tactile_block = jsPsych.randomization.repeat(all_types_tactile,1);  //for now change to 1
+    tactile_block = jsPsych.randomization.repeat(all_types_tactile,1);
+    tactile_block_1 = jsPsych.randomization.repeat(all_types_tactile,1);  //for now change to 1
+    tactile_block_2 = jsPsych.randomization.repeat(all_types_tactile,1);  //for now change to 1
+    tactile_block_3 = jsPsych.randomization.repeat(all_types_tactile,1);  //for now change to 1
+    tactile_block_4 = jsPsych.randomization.repeat(all_types_tactile,1);  //for now change to 1
+
+    tactile_block = [];
+    tactile_block.push(tactile_block_1);
+    tactile_block.push(tactile_block_2);
+    tactile_block.push(tactile_block_3);
+    tactile_block.push(tactile_block_4);
+    tactile_block = tactile_block.flat();
     ////////////////////////////////////////////////////////////
 
     //*******auditory block********//
@@ -538,16 +548,23 @@
 
     // all_types_auditory = [first_auditory_200_pink];
     all_types_auditory = [first_auditory_200_pink,second_auditory_341,third_auditory_583,forth_auditory_997,fifth_auditory_1704];
-    auditory_block = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
+    // auditory_block = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
+    auditory_block_1 = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
+    auditory_block_2 = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
+    auditory_block_3 = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
+    auditory_block_4 = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
+    auditory_block = [];
+    auditory_block.push(auditory_block_1);
+    auditory_block.push(auditory_block_2);
+    auditory_block.push(auditory_block_3);
+    auditory_block.push(auditory_block_4);
+    auditory_block = auditory_block.flat();
     /////////////////////////////////////////////////////////////////////////////////////////////
 
     //---------loop training----------//
     var loop_train_200_tactile = {
         timeline: [first_tempo_200_pink],
         loop_function: function (data) {
-            train_num = 0;
-            one_correct = false;
-            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
@@ -562,9 +579,6 @@
     var loop_train_341_tactile = {
         timeline: [second_tempo_341],
         loop_function: function (data) {
-            train_num = 0;
-            one_correct = false;
-            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
@@ -579,9 +593,6 @@
     var loop_train_583_tactile = {
         timeline: [third_tempo_583],
         loop_function: function (data) {
-            train_num = 0;
-            one_correct = false;
-            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
@@ -596,9 +607,6 @@
     var loop_train_997_tactile = {
         timeline: [forth_tempo_997],
         loop_function: function (data) {
-            train_num = 0;
-            one_correct = false;
-            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
@@ -613,9 +621,6 @@
     var loop_train_1704_tactile = {
         timeline: [fifth_tempo_1704],
         loop_function: function (data) {
-            train_num = 0;
-            one_correct = false;
-            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
@@ -645,9 +650,6 @@
     var loop_train_341_auditory = {
         timeline: [second_auditory_341],
         loop_function: function (data) {
-            train_num = 0;
-            one_correct = false;
-            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
@@ -662,9 +664,6 @@
     var loop_train_583_auditory = {
         timeline: [third_auditory_583],
         loop_function: function (data) {
-            train_num = 0;
-            one_correct = false;
-            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
@@ -679,9 +678,6 @@
     var loop_train_997_auditory = {
         timeline: [forth_auditory_997],
         loop_function: function (data) {
-            train_num = 0;
-            one_correct = false;
-            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
@@ -696,9 +692,6 @@
     var loop_train_1704_auditory = {
         timeline: [fifth_auditory_1704],
         loop_function: function (data) {
-            train_num = 0;
-            one_correct = false;
-            train_succeed_in_row = 0;
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
             var avg = get_average_interval(array_stamps);
@@ -756,7 +749,7 @@
             jsPsych.data.addProperties({phone_model:responses.Q0,headphone_model:responses.Q1,age:responses.Q2,sex:responses.Q3,
             musical_experience:responses.Q4,instruments:responses.Q5,metronomes_experience:responses.Q6,notification:responses.Q7,
             problems:responses.Q8});
-            saveData(subject_id, jsPsych.data.get().csv());
+            // saveData(subject_id, jsPsych.data.get().csv());
         }
     };
 
@@ -777,7 +770,7 @@
             jsonData = JSON.parse(jsonData);
             var responses = JSON.parse(jsonData[0].responses);
             jsPsych.data.addProperties({switch_application:responses.Q0,screen_protector:responses.Q1,dominant_hand:responses.Q2,adhd:responses.Q3});
-            saveData(subject_id, jsPsych.data.get().csv());
+            // saveData(subject_id, jsPsych.data.get().csv());
         }
     };
     //////////////////////////////////////////////////////////////
@@ -815,38 +808,38 @@
 
     ///-------------------time line-------------------///
     var timeline = [];
-    timeline.push(instruction_procedure);
+    // timeline.push(instruction_procedure);
     //קריינות
-    timeline.push(loop_node3);
-    timeline.push(volume_configuration_instruction);
-    timeline.push(volume_configuration);
-    timeline.push(form_trial);
-    timeline.push(natural_rythom_instruction);
-    timeline.push(natural_rythom);
+    // timeline.push(loop_node3);
+    // timeline.push(volume_configuration_instruction);
+    // timeline.push(volume_configuration);
+    // timeline.push(form_trial);
+    // timeline.push(natural_rythom_instruction);
+    // timeline.push(natural_rythom);
     if(CONTRA_BALANCE === 0)
     {
         timeline.push(start_train_instruction);
         //קריינות?
-        push_auditory_train();
+        // push_auditory_train();
         timeline.push(end_train_instruction);
         push_auditory();
         timeline.push(between_blocks_to_tactile);
         timeline.push(start_train_instruction);
         //קריינות?
-        push_tactile_train();
+        // push_tactile_train();
         timeline.push(end_train_instruction);
         push_tactile();
     }
     else {
         timeline.push(start_train_instruction);
         //קריינות?
-        push_tactile_train();
+        // push_tactile_train();
         timeline.push(end_train_instruction);
         push_tactile();
         timeline.push(between_blocks_to_auditory);
         timeline.push(start_train_instruction);
         //קריינות?
-        push_auditory_train();
+        // push_auditory_train();
         timeline.push(end_train_instruction);
         push_auditory();
     }
@@ -879,7 +872,7 @@
         on_finish: function () {
             exp_completed = 1;
             jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
-            saveData(subject_id, jsPsych.data.get().csv());
+            // saveData(subject_id, jsPsych.data.get().csv());
         }
     });
 
