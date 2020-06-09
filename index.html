@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Metronom2</title>
 <!--    comment jatos for run in github    -->
-<!--    <script src="jatos.js"></script>-->
+    <script src="jatos.js"></script>
     <script src="jspsych-6.0.5/jspsych.js"></script>
     <script src="jspsych-6.1.0/plugins/jspsych-survey-html-form.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-audio-button-response.js"></script>
@@ -65,12 +65,12 @@
 
 
     //-----saving data-----//
-    function saveData(name, data){
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify({filename: name, filedata: data}));
-    }
+    // function saveData(name, data){
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open('POST', 'write_data.php'); // 'write_data.php' is the path to the php file described above.
+    //     xhr.setRequestHeader('Content-Type', 'application/json');
+    //     xhr.send(JSON.stringify({filename: name, filedata: data}));
+    // }
 
     //*****instructions*****//
     var test_stimuli = [
@@ -666,24 +666,24 @@
         }
     };
 
-    all_types_auditory_train = [loop_train_200_auditory];
-    // all_types_auditory_train = [loop_train_200_auditory,loop_train_341_auditory,loop_train_997_auditory,loop_train_1704_auditory];
+    // all_types_auditory_train = [loop_train_200_auditory];
+    all_types_auditory_train = [loop_train_200_auditory,loop_train_341_auditory,loop_train_997_auditory,loop_train_1704_auditory];
     auditory_block_train = jsPsych.randomization.repeat(all_types_auditory_train,1);
     function push_auditory_train() {
         for(var i = 0; i < auditory_block_train.length; i++)
         {
-            // timeline.push(loop_train_583_auditory);
+            timeline.push(loop_train_583_auditory);
             timeline.push(auditory_block_train[i]);
         }
     }
 
-    all_types_tactile_train = [loop_train_200_auditory];
-    // all_types_tactile_train = [loop_train_200_tactile,loop_train_341_tactile,loop_train_997_tactile,loop_train_1704_tactile];
+    // all_types_tactile_train = [loop_train_200_auditory];
+    all_types_tactile_train = [loop_train_200_tactile,loop_train_341_tactile,loop_train_997_tactile,loop_train_1704_tactile];
     tactile_block_train = jsPsych.randomization.repeat(all_types_tactile_train,1);
     function push_tactile_train() {
         for(var i = 0; i < tactile_block_train.length; i++)
         {
-            // timeline.push(loop_train_583_tactile);
+            timeline.push(loop_train_583_tactile);
             timeline.push(tactile_block_train[i]);
         }
     }
@@ -813,30 +813,30 @@
     ///----------------------init----------------------///
 
     // init for JATOS
-    // jatos.onLoad(function() {
-    //     jsPsych.init({
-    //         timeline: timeline,
-    //         preload_audio: audio,
-    //         on_finish: function () {
-    //                 exp_complited = 1;
-    //             jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
-    //             var resultJson = jsPsych.data.get().json();
-    //             jatos.submitResultData(resultJson, jatos.startNextComponent);
-    //             jsPsych.endExperiment('The experiment was ended by pressing N.');
-    //         }
-    //     });
-    // });
+    jatos.onLoad(function() {
+        jsPsych.init({
+            timeline: timeline,
+            preload_audio: audio,
+            on_finish: function () {
+                    exp_complited = 1;
+                jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
+                var resultJson = jsPsych.data.get().json();
+                jatos.submitResultData(resultJson, jatos.startNextComponent);
+                jsPsych.endExperiment('The experiment was ended by pressing N.');
+            }
+        });
+    });
 
     // init for github(w/o saving)
-    jsPsych.init({
-        timeline: timeline,
-        preload_audio: audio,
-        on_finish: function () {
-            exp_completed = 1;
-            jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
-            saveData(subject_id, jsPsych.data.get().csv());
-        }
-    });
+    // jsPsych.init({
+    //     timeline: timeline,
+    //     preload_audio: audio,
+    //     on_finish: function () {
+    //         exp_completed = 1;
+    //         jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
+    //         saveData(subject_id, jsPsych.data.get().csv());
+    //     }
+    // });
 
 </script>
 </body>
