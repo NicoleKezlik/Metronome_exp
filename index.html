@@ -45,6 +45,7 @@
     NUM_STIMULI_TRIAL = 30;
     NUM_STIMULI_TRAIN = 5;
     CONTRA_BALANCE = Math.round(Math.random()); // 0 auditory block is first, 1 tactile block is first
+    // CONTRA_BALANCE = 0;
     var tactile_train_success = 0;
     var current_response = 6;
     var tempo_start = 0;
@@ -158,6 +159,13 @@
         stimulus: '<h3>Good job!</h3><h3>you finished half of the experiment</h3><h3>now you will hear a tempo' +
             ' instead of feeling it</h3>',
         choices: ['continue']
+    };
+
+    var first_narration = {
+      type: 'audio-button-response',
+      stimulus: 'new_sounds/sit_as_picture.wav',
+      choices: ['OK'],
+      prompt: '<br><img src="images/model.jpeg" style="width: 550px">'
     };
 
     var finished = {
@@ -313,6 +321,9 @@
 
     function check_train_loop(first_stamp,avg,num_of_taps) {
         // alert(train_succeed_in_row);
+        // alert(train_num);
+        // alert(train_succeed_in_row);
+        // alert(one_correct);
         train_num++;
         if(Math.abs(first_stamp-tempo_start) > 1500+(tempo*2))  //not early enough
         {
@@ -334,28 +345,42 @@
         {
             if(!one_correct)
             {
-                // alert("you can not participate");
-                jsPsych.endExperiment("We are sorry, as it seems you're not compatible with our experiment. We thank you for your participation");
+                alert("We are sorry, as it seems you're not compatible with our experiment. We thank you for your participation");
+                jatos.abortStudy("We are sorry, as it seems you're not compatible with our experiment. We thank you for your participation");
+                // jsPsych.endExperiment("We are sorry, as it seems you're not compatible with our experiment. We thank you for your participation");
+                train_num = 0;
+                train_succeed_in_row = 0;
+                one_correct = false;
                 return false;
             }
             else
             {
+                // alert("5 + false");
                 one_correct = false;
             }
         }
         if(train_num === 6)
         {
+            // alert("6");
             if(!one_correct)
             {
-                // alert("you cant ble ble");
-                jsPsych.endExperiment("We are sorry, as it seems you're not compatible with our experiment. We thank you for your participation");
+                alert("We are sorry, as it seems you're not compatible with our experiment. We thank you for your participation");
+                jatos.abortStudy("We are sorry, as it seems you're not compatible with our experiment. We thank you for your participation");
+                // jsPsych.endExperiment("We are sorry, as it seems you're not compatible with our experiment. We thank you for your participation");
             }
+            train_num = 0;
+            train_succeed_in_row = 0;
+            one_correct = false;
             return false;
         }
         if(train_succeed_in_row === 2)
         {
+            train_num = 0;
+            train_succeed_in_row = 0;
+            one_correct = false;
             return false;
         }
+        // alert("another round");
         return true;
     }
 
@@ -481,7 +506,7 @@
         stimulus: 'new_sounds/auditory_with_pink1.wav',
         choices: ['Tap'],
         data: {modality:'0',practice:'0',trial_tempo:'200'},
-        prompt: "<p>try tapping on the button with the same tempo</p>",
+        prompt: "<p>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start:function () {
             var event = new Event('build');
@@ -495,7 +520,7 @@
         stimulus: 'new_sounds/auditory_with_pink2.wav',
         choices: ['Tap'],
         data: {modality:'0',practice:'0',trial_tempo:'341'},
-        prompt: "<p>try tapping on the button with the same tempo</p>",
+        prompt: "<p>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start:function () {
             var event = new Event('build');
@@ -509,7 +534,7 @@
         stimulus: 'new_sounds/auditory_with_pink3.wav',
         choices: ['Tap'],
         data: {modality:'0',practice:'0',trial_tempo:'583'},
-        prompt: "<p>try tapping on the button with the same tempo</p>",
+        prompt: "<p>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start: function () {
             var event = new Event('build');
@@ -523,7 +548,7 @@
         stimulus: 'new_sounds/auditory_with_pink4.wav',
         choices: ['Tap'],
         data: {modality:'0',practice:'0',trial_tempo:'997'},
-        prompt: "<p>try tapping on the button with the same tempo</p>",
+        prompt: "<p>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start: function () {
             var event = new Event('build');
@@ -537,7 +562,7 @@
         stimulus: 'new_sounds/auditory_with_pink5.wav',
         choices: ['Tap'],
         data: {modality:'0',practice:'0',trial_tempo:'1704'},
-        prompt: "<p>try tapping on the button with the same tempo</p>",
+        prompt: "<p>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start: function () {
             var event = new Event('build');
@@ -576,6 +601,7 @@
             train_succeed_in_row = 0;
         }
     };
+
     var loop_train_341_tactile = {
         timeline: [second_tempo_341],
         loop_function: function (data) {
@@ -708,9 +734,9 @@
     all_types_auditory_train = [loop_train_200_auditory,loop_train_341_auditory,loop_train_997_auditory,loop_train_1704_auditory];
     auditory_block_train = jsPsych.randomization.repeat(all_types_auditory_train,1);
     function push_auditory_train() {
+        timeline.push(loop_train_583_auditory);
         for(var i = 0; i < auditory_block_train.length; i++)
         {
-            timeline.push(loop_train_583_auditory);
             timeline.push(auditory_block_train[i]);
         }
     }
@@ -719,9 +745,9 @@
     all_types_tactile_train = [loop_train_200_tactile,loop_train_341_tactile,loop_train_997_tactile,loop_train_1704_tactile];
     tactile_block_train = jsPsych.randomization.repeat(all_types_tactile_train,1);
     function push_tactile_train() {
+        timeline.push(loop_train_583_tactile);
         for(var i = 0; i < tactile_block_train.length; i++)
         {
-            timeline.push(loop_train_583_tactile);
             timeline.push(tactile_block_train[i]);
         }
     }
@@ -808,38 +834,39 @@
 
     ///-------------------time line-------------------///
     var timeline = [];
-    // timeline.push(instruction_procedure);
+    timeline.push(instruction_procedure);
+    timeline.push(natural_rythom_instruction);
+    timeline.push(natural_rythom);
     //קריינות
-    // timeline.push(loop_node3);
-    // timeline.push(volume_configuration_instruction);
-    // timeline.push(volume_configuration);
-    // timeline.push(form_trial);
-    // timeline.push(natural_rythom_instruction);
-    // timeline.push(natural_rythom);
+    timeline.push(first_narration);
+    timeline.push(loop_node3);
+    timeline.push(volume_configuration_instruction);
+    timeline.push(volume_configuration);
+    timeline.push(form_trial);
     if(CONTRA_BALANCE === 0)
     {
         timeline.push(start_train_instruction);
         //קריינות?
-        // push_auditory_train();
+        push_auditory_train();
         timeline.push(end_train_instruction);
         push_auditory();
         timeline.push(between_blocks_to_tactile);
         timeline.push(start_train_instruction);
         //קריינות?
-        // push_tactile_train();
+        push_tactile_train();
         timeline.push(end_train_instruction);
         push_tactile();
     }
     else {
         timeline.push(start_train_instruction);
         //קריינות?
-        // push_tactile_train();
+        push_tactile_train();
         timeline.push(end_train_instruction);
         push_tactile();
         timeline.push(between_blocks_to_auditory);
         timeline.push(start_train_instruction);
         //קריינות?
-        // push_auditory_train();
+        push_auditory_train();
         timeline.push(end_train_instruction);
         push_auditory();
     }
