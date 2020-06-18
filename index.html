@@ -447,18 +447,18 @@
 
     // all_types_tactile = [first_tempo_200_pink];
     all_types_tactile = [first_tempo_200_pink,second_tempo_341,third_tempo_583,forth_tempo_997,fifth_tempo_1704];
-    tactile_block = jsPsych.randomization.repeat(all_types_tactile,1);
-    // tactile_block_1 = jsPsych.randomization.repeat(all_types_tactile,1);  //for now change to 1
-    // tactile_block_2 = jsPsych.randomization.repeat(all_types_tactile,1);  //for now change to 1
+    // tactile_block = jsPsych.randomization.repeat(all_types_tactile,1);
+    tactile_block_1 = jsPsych.randomization.repeat(all_types_tactile,1);  //for now change to 1
+    tactile_block_2 = jsPsych.randomization.repeat(all_types_tactile,1);  //for now change to 1
     // tactile_block_3 = jsPsych.randomization.repeat(all_types_tactile,1);  //for now change to 1
     // tactile_block_4 = jsPsych.randomization.repeat(all_types_tactile,1);  //for now change to 1
     //
-    // tactile_block = [];
-    // tactile_block.push(tactile_block_1);
-    // tactile_block.push(tactile_block_2);
+    tactile_block = [];
+    tactile_block.push(tactile_block_1);
+    tactile_block.push(tactile_block_2);
     // tactile_block.push(tactile_block_3);
     // tactile_block.push(tactile_block_4);
-    // tactile_block = tactile_block.flat();
+    tactile_block = tactile_block.flat();
     ////////////////////////////////////////////////////////////
 
     //*******auditory block********//
@@ -534,17 +534,17 @@
 
     // all_types_auditory = [first_auditory_200_pink];
     all_types_auditory = [first_auditory_200_pink,second_auditory_341,third_auditory_583,forth_auditory_997,fifth_auditory_1704];
-    auditory_block = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
-    // auditory_block_1 = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
-    // auditory_block_2 = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
+    // auditory_block = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
+    auditory_block_1 = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
+    auditory_block_2 = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
     // auditory_block_3 = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
     // auditory_block_4 = jsPsych.randomization.repeat(all_types_auditory,1);  //for now change to 1
-    // auditory_block = [];
-    // auditory_block.push(auditory_block_1);
-    // auditory_block.push(auditory_block_2);
+    auditory_block = [];
+    auditory_block.push(auditory_block_1);
+    auditory_block.push(auditory_block_2);
     // auditory_block.push(auditory_block_3);
     // auditory_block.push(auditory_block_4);
-    // auditory_block = auditory_block.flat();
+    auditory_block = auditory_block.flat();
     /////////////////////////////////////////////////////////////////////////////////////////////
 
     //--------------------loop training---------------------//
