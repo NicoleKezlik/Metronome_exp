@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Metronom2</title>
 <!--    comment jatos for run in github    -->
-    <script src="jatos.js"></script>
+<!--    <script src="jatos.js"></script>-->
     <script src="jspsych-6.0.5/jspsych.js"></script>
     <script src="jspsych-6.1.0/plugins/jspsych-survey-html-form.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-audio-button-response.js"></script>
@@ -44,8 +44,8 @@
     VIBRATION_LENGTH = 70;
     NUM_STIMULI_TRIAL = 30;
     NUM_STIMULI_TRAIN = 5;
-    CONTRA_BALANCE = Math.round(Math.random()); // 0 auditory block is first, 1 tactile block is first
-    // CONTRA_BALANCE = 0;
+    // CONTRA_BALANCE = Math.round(Math.random()); // 0 auditory block is first, 1 tactile block is first
+    CONTRA_BALANCE = 1;
     var tactile_train_success = 0;
     var current_response = 6;
     var tempo_start = 0;
@@ -324,7 +324,7 @@
         {
             alert("Please try to start tapping earlier in the trial");
         }
-        else if(num_of_taps < 50)  //not enough taps
+        else if(num_of_taps < 25)  //not enough taps
         {
             alert("Please try to match the beat");
         }
@@ -340,6 +340,8 @@
         }
         if(one_correct)
         {
+            one_correct = false;
+            train_num = 0;
             return false;
         }
         return true;
@@ -561,7 +563,7 @@
             tempo_start = event.timeStamp;
             vibration_341_start = event.timeStamp;
             tempo = 341;
-            navigator.vibrate(tempos_arrays[1].slice(0,15));
+            navigator.vibrate(tempos_arrays[2].slice(0,31));
         }
     };
 
@@ -577,7 +579,8 @@
             tempo_start = event.timeStamp;
             vibration_583_start = event.timeStamp;
             tempo = 583;
-            navigator.vibrate(tempos_arrays[2].slice(0,15));
+            alert(tempos_arrays[3].slice(0,31));
+            navigator.vibrate(tempos_arrays[3].slice(0,31));
         }
     };
 
@@ -593,7 +596,7 @@
             tempo_start = event.timeStamp;
             vibration_997_start = event.timeStamp;
             tempo = 997;
-            navigator.vibrate(tempos_arrays[3].slice(0,15));
+            navigator.vibrate(tempos_arrays[4].slice(0,31));
         }
     };
     var second_auditory_341_train = {
@@ -644,8 +647,7 @@
         loop_function: function (data) {
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
-            var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg,array_stamps.length);
+            return check_train_loop(array_stamps[0],array_stamps.length);
         },
         on_start: function () {
             train_num = 0;
@@ -658,8 +660,7 @@
         loop_function: function (data) {
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
-            var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg,array_stamps.length);
+            return check_train_loop(array_stamps[0],array_stamps.length);
         },
         on_start: function () {
             train_num = 0;
@@ -672,8 +673,7 @@
         loop_function: function (data) {
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
-            var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg,array_stamps.length);
+            return check_train_loop(array_stamps[0],array_stamps.length);
         },
         on_start: function () {
             train_num = 0;
@@ -687,8 +687,7 @@
         loop_function: function (data) {
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
-            var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg,array_stamps.length);
+            return check_train_loop(array_stamps[0],array_stamps.length);
         },
         on_start: function () {
             train_num = 0;
@@ -701,8 +700,7 @@
         loop_function: function (data) {
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
-            var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg,array_stamps.length);
+            return check_train_loop(array_stamps[0],array_stamps.length);
         },
         on_start: function () {
             train_num = 0;
@@ -715,8 +713,7 @@
         loop_function: function (data) {
             var time_stamps = read_time_stamps_from_data();
             var array_stamps = create_array_stamps(time_stamps);
-            var avg = get_average_interval(array_stamps);
-            return check_train_loop(array_stamps[0],avg,array_stamps.length);
+            return check_train_loop(array_stamps[0],array_stamps.length);
         },
         on_start: function () {
             train_num = 0;
@@ -830,14 +827,14 @@
 
     ///-------------------time line-------------------///
     var timeline = [];
-    timeline.push(instruction_procedure);
-    timeline.push(natural_rythom_instruction);
-    timeline.push(natural_rythom);
+    // timeline.push(instruction_procedure);
+    // timeline.push(natural_rythom_instruction);
+    // timeline.push(natural_rythom);
     //קריינות
-    timeline.push(first_narration);
-    timeline.push(loop_node3);
-    timeline.push(volume_configuration_instruction);
-    timeline.push(volume_configuration);
+    // timeline.push(first_narration);
+    // timeline.push(loop_node3);
+    // timeline.push(volume_configuration_instruction);
+    // timeline.push(volume_configuration);
     timeline.push(form_trial);
     if(CONTRA_BALANCE === 0)
     {
@@ -874,30 +871,30 @@
     ///----------------------init----------------------///
 
     // init for JATOS
-    jatos.onLoad(function() {
-        jsPsych.init({
-            timeline: timeline,
-            preload_audio: audio,
-            on_finish: function () {
-                    exp_complited = 1;
-                jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
-                var resultJson = jsPsych.data.get().json();
-                jatos.submitResultData(resultJson, jatos.startNextComponent);
-                jsPsych.endExperiment('The experiment was ended by pressing N.');
-            }
-        });
-    });
+    // jatos.onLoad(function() {
+    //     jsPsych.init({
+    //         timeline: timeline,
+    //         preload_audio: audio,
+    //         on_finish: function () {
+    //                 exp_complited = 1;
+    //             jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
+    //             var resultJson = jsPsych.data.get().json();
+    //             jatos.submitResultData(resultJson, jatos.startNextComponent);
+    //             jsPsych.endExperiment('The experiment was ended by pressing N.');
+    //         }
+    //     });
+    // });
 
     // init for github(w/o saving)
-    // jsPsych.init({
-    //     timeline: timeline,
-    //     preload_audio: audio,
-    //     on_finish: function () {
-    //         exp_completed = 1;
-    //         jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
-    //         // saveData(subject_id, jsPsych.data.get().csv());
-    //     }
-    // });
+    jsPsych.init({
+        timeline: timeline,
+        preload_audio: audio,
+        on_finish: function () {
+            exp_completed = 1;
+            jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
+            // saveData(subject_id, jsPsych.data.get().csv());
+        }
+    });
 
 </script>
 </body>
