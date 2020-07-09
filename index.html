@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Metronom2</title>
 <!--    comment jatos for run in github    -->
-<!--    <script src="jatos.js"></script>-->
+    <script src="jatos.js"></script>
     <script src="jspsych-6.0.5/jspsych.js"></script>
     <script src="jspsych-6.1.0/plugins/jspsych-survey-html-form.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-audio-button-response.js"></script>
@@ -44,8 +44,8 @@
     VIBRATION_LENGTH = 70;
     NUM_STIMULI_TRIAL = 30;
     NUM_STIMULI_TRAIN = 5;
-    // CONTRA_BALANCE = Math.round(Math.random()); // 0 auditory block is first, 1 tactile block is first
-    CONTRA_BALANCE = 1;
+    CONTRA_BALANCE = Math.round(Math.random()); // 0 auditory block is first, 1 tactile block is first
+    // CONTRA_BALANCE = 1;
     var tactile_train_success = 0;
     var current_response = 6;
     var tempo_start = 0;
@@ -54,15 +54,22 @@
     var train_num = 0;
     var one_correct = false;
     var exp_completed = 0;
-    AUDIO_PATH = "new_sounds/auditory_with_pink";
-    TACTILE_PATH = "new_sounds/tactile_with_silence";
+    AUDIO_PATH = "new_sounds/SOA_auditory_with_pink";
+    TACTILE_PATH = "new_sounds/SOA_tactile_with_pink";
+    AUDIO_TRAIN_PATH = "new_sounds/short_auditory_with_pink";
+    TACTILE_TRAIN_PATH = "new_sounds/short_tactile_with_pink";
     TYPE = ".wav";
     audio = [];
     for(var i = 1; i<6; i++)
     {
         audio.push(AUDIO_PATH+i+TYPE);
         audio.push(TACTILE_PATH+i+TYPE);
+        audio.push(AUDIO_TRAIN_PATH+i+TYPE);
+        audio.push(TACTILE_TRAIN_PATH+i+TYPE);
     }
+    images = [];
+    images.push("images/volume_middle_horizontal.png");
+    images.push("images/model.jpeg");
 
 
     //-----saving data-----//
@@ -138,27 +145,39 @@
         type: 'html-button-response',
         stimulus: '<h1>End of practice run</h1><br><h3>The experiment will begin immediately. Your</h3><h3>assignment will be the same, but you will not</h3>' +
             '<h3>receive feedback during the experiment.</h3><br><h3>To begin the experiment, press “Continue”</h3><br>',
-        choices: ['continue']
+        choices: ['continue'],
+        on_finish: function () {
+            save_on_finish();
+        }
     };
 
     var exp_to_form = {
       type: "html-button-response",
       stimulus: '<h1>End of expriment</h1><br><h3>We would appreciate it if you could fill out the following form</h3>',
-        choices: ['To the form']
+        choices: ['To the form'],
+        on_finish: function () {
+            save_on_finish();
+        }
     };
 
     var between_blocks_to_tactile = {
       type: "html-button-response",
       stimulus: '<h3>Good job!</h3><h3>you finished half of the experiment</h3><h3>now you will feeling a tempo' +
           ' instead of hearing it</h3>',
-      choices: ['continue']
+      choices: ['continue'],
+        on_finish: function () {
+            save_on_finish();
+      }
     };
 
     var between_blocks_to_auditory = {
         type: "html-button-response",
         stimulus: '<h3>Good job!</h3><h3>you finished half of the experiment</h3><h3>now you will hear a tempo' +
             ' instead of feeling it</h3>',
-        choices: ['continue']
+        choices: ['continue'],
+        on_finish: function () {
+            save_on_finish();
+        }
     };
 
     var first_narration = {
@@ -176,6 +195,7 @@
 			exp_completed = 1;
             jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
             // saveData(subject_id, jsPsych.data.get().csv());
+            save_on_finish();
 		}
     };
     /////////////////////////////////////////
@@ -187,7 +207,6 @@
         choices: [],
         prompt: "<p>Count the number of vibrations you feel </p>",
         trial_duration: 4600+500,
-        data: {test_pp: '0'},
         on_start: function () {
             navigator.vibrate([1,TIME_BEFORE_VIBRATE_IN_MS,70,517,70,517,70,517,70,517,70,517,70,517]);
         }
@@ -274,7 +293,9 @@
         stimulus: 'new_sounds/tactile_with_silence5.wav',
         choices: ['Tap'],
         trial_duration: 60000,
-        // data: {modality:'1',practice:'0',trial_tempo:'200'},
+        on_finish: function () {
+            save_on_finish();
+        }
     };
     ///////////////////////////////////////////////
     //---------training---------//
@@ -324,7 +345,7 @@
         {
             alert("Please try to start tapping earlier in the trial");
         }
-        else if(num_of_taps < 25)  //not enough taps
+        else if(num_of_taps < 20)  //not enough taps
         {
             alert("Please try to match the beat");
         }
@@ -557,13 +578,13 @@
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
         trial_ends_after_audio:true,
-        data: {modality:'1',practice:'0',trial_tempo:'341'},
+        data: {modality:'1',practice:'1',trial_tempo:'341'},
         on_start: function () {
             var event = new Event('build');
             tempo_start = event.timeStamp;
             vibration_341_start = event.timeStamp;
             tempo = 341;
-            navigator.vibrate(tempos_arrays[2].slice(0,31));
+            navigator.vibrate(tempos_arrays[1].slice(0,31));
         }
     };
 
@@ -573,14 +594,14 @@
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
         trial_ends_after_audio:true,
-        data: {modality:'1',practice:'0',trial_tempo:'583'},
+        data: {modality:'1',practice:'1',trial_tempo:'583'},
         on_start: function () {
             var event = new Event('build');
             tempo_start = event.timeStamp;
             vibration_583_start = event.timeStamp;
             tempo = 583;
-            alert(tempos_arrays[3].slice(0,31));
-            navigator.vibrate(tempos_arrays[3].slice(0,31));
+            // alert(tempos_arrays[3].slice(0,31));
+            navigator.vibrate(tempos_arrays[2].slice(0,31));
         }
     };
 
@@ -590,20 +611,20 @@
         choices: ['Tap'],
         prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
         trial_ends_after_audio:true,
-        data: {modality:'1',practice:'0',trial_tempo:'997'},
+        data: {modality:'1',practice:'1',trial_tempo:'997'},
         on_start: function () {
             var event = new Event('build');
             tempo_start = event.timeStamp;
             vibration_997_start = event.timeStamp;
             tempo = 997;
-            navigator.vibrate(tempos_arrays[4].slice(0,31));
+            navigator.vibrate(tempos_arrays[3].slice(0,31));
         }
     };
     var second_auditory_341_train = {
         type: 'function-tap',
         stimulus: 'new_sounds/short_auditory_with_pink2.wav',
         choices: ['Tap'],
-        data: {modality:'0',practice:'0',trial_tempo:'341'},
+        data: {modality:'0',practice:'1',trial_tempo:'341'},
         prompt: "<p>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start:function () {
@@ -617,7 +638,7 @@
         type: 'function-tap',
         stimulus: 'new_sounds/short_auditory_with_pink3.wav',
         choices: ['Tap'],
-        data: {modality:'0',practice:'0',trial_tempo:'583'},
+        data: {modality:'0',practice:'1',trial_tempo:'583'},
         prompt: "<p>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start: function () {
@@ -631,7 +652,7 @@
         type: 'function-tap',
         stimulus: 'new_sounds/short_auditory_with_pink4.wav',
         choices: ['Tap'],
-        data: {modality:'0',practice:'0',trial_tempo:'997'},
+        data: {modality:'0',practice:'1',trial_tempo:'997'},
         prompt: "<p>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start: function () {
@@ -769,6 +790,8 @@
             musical_experience:responses.Q4,instruments:responses.Q5,metronomes_experience:responses.Q6,notification:responses.Q7,
             problems:responses.Q8});
             // saveData(subject_id, jsPsych.data.get().csv());
+            exp_complited = 1;
+            save_on_finish();
         }
     };
 
@@ -790,6 +813,7 @@
             var responses = JSON.parse(jsonData[0].responses);
             jsPsych.data.addProperties({switch_application:responses.Q0,screen_protector:responses.Q1,dominant_hand:responses.Q2,adhd:responses.Q3});
             // saveData(subject_id, jsPsych.data.get().csv());
+            save_on_finish();
         }
     };
     //////////////////////////////////////////////////////////////
@@ -827,14 +851,14 @@
 
     ///-------------------time line-------------------///
     var timeline = [];
-    // timeline.push(instruction_procedure);
-    // timeline.push(natural_rythom_instruction);
-    // timeline.push(natural_rythom);
+    timeline.push(instruction_procedure);
+    timeline.push(natural_rythom_instruction);
+    timeline.push(natural_rythom);
     //קריינות
-    // timeline.push(first_narration);
-    // timeline.push(loop_node3);
-    // timeline.push(volume_configuration_instruction);
-    // timeline.push(volume_configuration);
+    timeline.push(first_narration);
+    timeline.push(loop_node3);
+    timeline.push(volume_configuration_instruction);
+    timeline.push(volume_configuration);
     timeline.push(form_trial);
     if(CONTRA_BALANCE === 0)
     {
@@ -870,31 +894,38 @@
 
     ///----------------------init----------------------///
 
+    function save_on_finish()
+    {
+        jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
+        var resultJson = jsPsych.data.get().json();
+        jatos.submitResultData(resultJson);
+    }
+
     // init for JATOS
-    // jatos.onLoad(function() {
-    //     jsPsych.init({
-    //         timeline: timeline,
-    //         preload_audio: audio,
-    //         on_finish: function () {
-    //                 exp_complited = 1;
-    //             jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
-    //             var resultJson = jsPsych.data.get().json();
-    //             jatos.submitResultData(resultJson, jatos.startNextComponent);
-    //             jsPsych.endExperiment('The experiment was ended by pressing N.');
-    //         }
-    //     });
-    // });
+    jatos.onLoad(function() {
+        jsPsych.init({
+            timeline: timeline,
+            preload_audio: audio,
+            preload_images: images,
+            on_finish: function () {
+                exp_complited = 1;
+                save_on_finish();
+                jsPsych.endExperiment();
+            }
+        });
+    });
 
     // init for github(w/o saving)
-    jsPsych.init({
-        timeline: timeline,
-        preload_audio: audio,
-        on_finish: function () {
-            exp_completed = 1;
-            jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
-            // saveData(subject_id, jsPsych.data.get().csv());
-        }
-    });
+    // jsPsych.init({
+    //     timeline: timeline,
+    //     preload_audio: audio,
+    //     preload_images: images,
+    //     on_finish: function () {
+    //         exp_completed = 1;
+    //         jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
+    //         // saveData(subject_id, jsPsych.data.get().csv());
+    //     }
+    // });
 
 </script>
 </body>
