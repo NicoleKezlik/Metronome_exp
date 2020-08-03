@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <title>Metronom2</title>
 <!--    comment jatos for run in github    -->
-    <script src="jatos.js"></script>
+<!--    <script src="jatos.js"></script>-->
     <script src="jspsych-6.0.5/jspsych.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-instructions.js"></script>
+    <script src="jspsych-6.1.0/plugins/jspsych-external-html.js"></script>
     <script src="jspsych-6.1.0/plugins/jspsych-survey-html-form.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-audio-button-response.js"></script>
     <script src="jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
@@ -19,10 +21,17 @@
 </head>
 <style>
     .instruction{
-        text-align: center;
-        top: 10%;
-        left: 20%;
-        font-size: 4vw;
+        /*text-align: center;*/
+        /*top: 10%;*/
+        /*left: 20%;*/
+        /*font-size: 4vw;*/
+        font-size: 2rem;
+        /*max-width: 100%;*/
+        margin-left: 10%;
+        margin-right: 10%;
+        line-height: 110%;
+        /*text-align: left;*/
+        /*font-weight: bold;*/
     }
     .column{
         width: 160px;
@@ -35,8 +44,6 @@
 </style>
 <body>
 <script>
-
-    //TODO change randomization to include all before second round(in actual trial)
 
     /*****CONSTANTS****/
     TEMPOS_IN_MS = [200,341,583,997,1704];
@@ -81,37 +88,98 @@
     // }
 
     //*****instructions*****//
-    var test_stimuli = [
-        {stimulus: '<h3 class="instruction">Hello and welcome to our experiment</h3><p class="instruction">Please follow the instructions carefully </p><p class="instruction">This experiment is approx. 20 min long. </p><p class="instruction">This experiment is to be completed to the end with <b>no breaks</b>.\n' +
-                '</p><p class="instruction">When you are ready to proceed, press “continue”</p>'},
-        {stimulus: '<p class="instruction">Please take a few seconds to</p><p class="instruction">close any applications that</p><p class="instruction">may be running in the background</p>'},
-        {stimulus: '<p class="instruction">The experiment will last approx.20 min,</p><p class="instruction">please make sure you are sitting comfortably.</p>'},
-        {stimulus: '<p class="instruction">Please make sure you are sitting</p><p class="instruction">in a quiet area with no disturbances</p>'},
-        {stimulus: '<p class="instruction">Please remove your phone’s protective  </p><p class="instruction">case (if you have one)</p>'},
-        {stimulus: '<p class="instruction">Please hold your phone in your non-dominant hand. It is recommended</p><p class="instruction">that you extend your arm. You can support your</p><p ' +
-                'class="instruction">elbow on an arm rest of place your hand on a soft surface. Please do not</p><p class="instruction"> switch hands for the duration of the experiment</p>'},
-        {stimulus: '<p class="instruction">Please connect a set of headphones/earphones and make</p><p class="instruction">sure they are sitting comfortably in both ears</p>'},
-        {stimulus: '<p class="instruction">Please make sure your phone is on sound</p><p class="instruction"> (NOT on silent mode\\vibrate-only\\’do not disturb’)</p>'},
-        {stimulus: '<p class="instruction">Please set your phone’s volume to the middle of the sound bar </p>'},
-        // {stimulus: '<p class="instruction">אנא צא מכל האפליקציות </p><p class="instruction">הרקע האחרות</p>'}
-    ];
-    var instruction = {
-        type: "html-button-response",
-        stimulus: jsPsych.timelineVariable('stimulus'),
-        choices: ['continue']
+
+    // sample function that might be used to check if a subject has given
+    // consent to participate.
+    var check_consent = function(elem) {
+        if (document.getElementById('consent_checkbox').checked) {
+            return true;
+        }
+        else {
+            alert("If you wish to participate, you must check the box next to the statement 'I read and understood the above'");
+            return false;
+        }
+        return false;
     };
-    var instruction_procedure = {
-        timeline: [instruction],
-        timeline_variables: test_stimuli,
+
+    var consent = {
+        type:'external-html',
+        url: "consent_form.html",
+        cont_btn: "start",
+        check_fn: check_consent
+    };
+
+    var app_instructions = {
+        type: 'instructions',
+        pages: [
+            '<p class="instruction">Please download "Gamemode" app, to avoid getting notification during the experiment.</p> <a href=https://play.google.com/store/apps/details?id=com.blocknotification.gamemode>Gamemode download</a>',
+            '<p class="instruction">Here is how to activate the app: </p><img src="images/1.jpg" style="max-width: 80%">',
+            '<img src="images/2.jpg" style="max-width: 80%">',
+            '<img src="images/3.jpg" style="max-width: 80%">',
+            '<img src="images/4.jpg" style="max-width: 80%">',
+            '<img src="images/5.jpg" style="max-width: 80%">'
+        ],
+        show_clickable_nav: true
+    };
+
+    var first_instructions = {
+        type: 'instructions',
+        pages: [
+            '<h1>Hello and welcome to our experiment</h1><p class="instruction">Please follow the instructions carefully ' +
+    'This experiment is approx.20 min long. ' +
+    'This experiment is to be completed to the end with no breaks.\n' +
+    'When you are ready to proceed, press “Next”</p>',
+            '<p class="instruction">Please take a few seconds to close any applications that may be running in the background</p>',
+            '<p class="instruction">The experiment will last approx.20 min, please make sure you are sitting comfortably.</p>',
+            '<p class="instruction">Please make sure you are sitting in a quiet area with no disturbances</p>',
+            '<p class="instruction">Please remove your phone’s protective case (if you have one)</p>',
+            '<p class="instruction">Please hold your phone in your non-dominant hand. It is recommended that you extend your arm.</p><p class="instruction"> You can support your ' +
+                    'elbow on an arm rest or place your hand on a soft surface.\n Please do not switch hands for the duration of the experiment</p>',
+            '<p class="instruction">Please connect a set of headphones/earphones and make sure they are sitting comfortably in both ears</p>',
+            '<p class="instruction">Please make sure your phone is on sound (NOT on silent mode\\vibrate-only\\’do not disturb’)</p>',
+            '<p class="instruction">Please set your phone’s volume to the middle of the sound bar </p>'
+        ],
+        show_clickable_nav: true,
         on_start: function () {
             jsPsych.data.addProperties({exp_start:Date.now()});
         }
     };
 
+
+    // var test_stimuli = [
+    //     {stimulus: '<h1>Hello and welcome to our experiment</h1><p class="instruction">Please follow the instructions carefully ' +
+    //             'This experiment is approx.20 min long. ' +
+    //             'This experiment is to be completed to the end with no breaks.\n' +
+    //             'When you are ready to proceed, press “continue”</p>'},
+    //     {stimulus: '<p class="instruction">Please take a few seconds to close any applications that may be running in the background</p>'},
+    //     {stimulus: '<p class="instruction">The experiment will last approx.20 min, please make sure you are sitting comfortably.</p>'},
+    //     {stimulus: '<p class="instruction">Please make sure you are sitting in a quiet area with no disturbances</p>'},
+    //     {stimulus: '<p class="instruction">Please remove your phone’s protective case (if you have one)</p>'},
+    //     {stimulus: '<p class="instruction">Please hold your phone in your non-dominant hand. It is recommended that you extend your arm.</p><p class="instruction"> You can support your ' +
+    //             'elbow on an arm rest or place your hand on a soft surface.\n Please do not switch hands for the duration of the experiment</p>'},
+    //     {stimulus: '<p class="instruction">Please connect a set of headphones/earphones and make sure they are sitting comfortably in both ears</p>'},
+    //     {stimulus: '<p class="instruction">Please make sure your phone is on sound (NOT on silent mode\\vibrate-only\\’do not disturb’)</p>'},
+    //     {stimulus: '<p class="instruction">Please set your phone’s volume to the middle of the sound bar </p>'},
+    // ];
+    // var instruction = {
+    //     type: "html-button-response",
+    //     stimulus: jsPsych.timelineVariable('stimulus'),
+    //     choices: ['continue']
+    // };
+    // var instruction_procedure = {
+    //     timeline: [instruction],
+    //     timeline_variables: test_stimuli,
+    //     on_start: function () {
+    //         jsPsych.data.addProperties({exp_start:Date.now()});
+    //     }
+    // };
+
+
+
     var volume_configuration_instruction = {
         type: 'html-button-response',
-        stimulus: "<h3>Volume Adjustment</h3><p>During the experiment there will be </p><p>background noise. Let's adjust the </p><p>volume to a level that will be comfortable" +
-            "</p><p>for you.</p><br><p>Please adjust your volume to the center</p><p>of your sound bar" +
+        stimulus: "<h3>Volume Adjustment</h3><p class='instruction'>During the experiment there will be background noise. Let's adjust the volume to a level that will be comfortable" +
+            "for you. Please adjust your volume to the center of your sound bar" +
             "</p><img src='images/volume_middle_horizontal.png'><br>",
         choices: ['continue'],
     };
@@ -120,31 +188,31 @@
       type: 'audio-button-response',
       stimulus: 'new_sounds/auditory_with_pink3.wav',
       choices: ['OK'],
-      prompt: "<p>Raise or lower your volume to a level that is </p><p>comfortable for you.</p><p>The sound should be clearly audible" +
-          "</p><p>When the volume is adjusted to a comfortable level, press 'OK'</p>"
+      prompt: "<p class='instruction'>Raise or lower your volume to a level that is comfortable for you. The sound should be clearly audible" +
+          "When the volume is adjusted to a comfortable level, press 'OK'</p>"
     };
 
     var form_trial = {
         type: 'survey-html-form',
-        preamble: '<h3> Before you begin, please check the following: </h3>',
-        html: '<div style="text-align: left; margin-left: 20%"><input type="checkbox" />The volume is at a comfortable level' +
-            '<br><input type="checkbox" />You are in a quiet room with no disturbances' +
-            '<br><input type="checkbox"/> Your phone is in your non-dominant hand and you have taken off the protective case' +
-            '<br><input type="checkbox"/>There are no applications running in the background' +
-            '<br><input type="checkbox"/>Your headphones/earphones are sitting comfortably in both ears<br></div>'
+        preamble: '<p class="instruction"> Before you begin, please check the following: </p>',
+        html: '<div style="text-align: left; margin-left: 15%; font-size: 2.5rem; line-height: 110%" ><input type="checkbox"/>  The volume is at a comfortable level' +
+            '<br><br><input type="checkbox"/>  You are in a quiet room with no disturbances' +
+            '<br><br><input type="checkbox"/>  Your phone is in your non-dominant hand and you have taken off the protective case' +
+            '<br><br><input type="checkbox"/>  There are no applications running in the background' +
+            '<br><br><input type="checkbox"/>  Your headphones/earphones are sitting comfortably in both ears<br><br></div>'
     };
 
     var start_train_instruction = {
       type: 'html-button-response',
-      stimulus: '<h3>Great!</h3><h3>We will now begin with a short practice</h3><h3>run and then move on to the</h3>' +
-          '<h3>experiment</h3>',
+      stimulus: '<p class="instruction">Great!</p><p class="instruction">We will now begin with a short practice run and then move on to the' +
+          ' experiment</p>',
         choices: ['continue']
     };
 
     var end_train_instruction = {
         type: 'html-button-response',
-        stimulus: '<h1>End of practice run</h1><br><h3>The experiment will begin immediately. Your</h3><h3>assignment will be the same, but you will not</h3>' +
-            '<h3>receive feedback during the experiment.</h3><br><h3>To begin the experiment, press “Continue”</h3><br>',
+        stimulus: '<p class="instruction" style="font-weight: bold">End of practice run</p><p class="instruction">The experiment will begin immediately. Your assignment will be the same, but you will not ' +
+            'receive feedback during the experiment.</p><p class="instruction">To begin the experiment, press “Continue”</p><br>',
         choices: ['continue'],
         on_finish: function () {
             save_on_finish();
@@ -153,7 +221,7 @@
 
     var exp_to_form = {
       type: "html-button-response",
-      stimulus: '<h1>End of expriment</h1><br><h3>We would appreciate it if you could fill out the following form</h3>',
+      stimulus: '<h1>End of expriment</h1><br><p class=\'instruction\'>We would appreciate it if you could fill out the following form</p>',
         choices: ['To the form'],
         on_finish: function () {
             save_on_finish();
@@ -162,8 +230,8 @@
 
     var between_blocks_to_tactile = {
       type: "html-button-response",
-      stimulus: '<h3>Good job!</h3><h3>you finished half of the experiment</h3><h3>now you will feeling a tempo' +
-          ' instead of hearing it</h3>',
+      stimulus: '<p class="instruction">Good job!</p><p class="instruction">you finished half of the experiment</p><p class=\'instruction\'>now you will feeling a tempo' +
+          ' instead of hearing it</p>',
       choices: ['continue'],
         on_finish: function () {
             save_on_finish();
@@ -172,8 +240,8 @@
 
     var between_blocks_to_auditory = {
         type: "html-button-response",
-        stimulus: '<h3>Good job!</h3><h3>you finished half of the experiment</h3><h3>now you will hear a tempo' +
-            ' instead of feeling it</h3>',
+        stimulus: '<p class=\'instruction\'>Good job!</p><p class=\'instruction\'>you finished half of the experiment</p><p class=\'instruction\'>now you will hear a tempo' +
+            ' instead of feeling it</p>',
         choices: ['continue'],
         on_finish: function () {
             save_on_finish();
@@ -189,7 +257,7 @@
 
     var finished = {
         type: 'html-button-response',
-        stimulus: '<p class="instruction">You have finished</p><p class="instruction"> the experiment</p><br><p class="instruction">Thank you</p>',
+        stimulus: '<p class="instruction">You have finished the experiment</p><p class="instruction">Thank you</p>',
         choices: ['Continue'],
 		on_finish: function(){
 			exp_completed = 1;
@@ -205,7 +273,7 @@
         type: 'function-tap',
         stimulus: 'new_sounds/tactile_with_silence3.wav',
         choices: [],
-        prompt: "<p>Count the number of vibrations you feel </p>",
+        prompt: "<p class='instruction'>Count the number of vibrations you feel </p>",
         trial_duration: 4600+500,
         on_start: function () {
             navigator.vibrate([1,TIME_BEFORE_VIBRATE_IN_MS,70,517,70,517,70,517,70,517,70,517,70,517]);
@@ -215,7 +283,7 @@
         type: 'function-tap',
         stimulus: 'new_sounds/tactile_with_silence1.wav',
         choices: [],
-        prompt: "<p>Count the number of vibrations you feel </p>",
+        prompt: "<p class='instruction'>Count the number of vibrations you feel </p>",
         trial_duration: 2800+500,
         on_start: function () {
             navigator.vibrate([1,TIME_BEFORE_VIBRATE_IN_MS,70,130,70,130,70,130,70,130,70,130,70,130,70,130,70,130,70,130]);
@@ -225,7 +293,7 @@
         type: 'function-tap',
         stimulus: 'new_sounds/tactile_with_silence5.wav',
         choices: [],
-        prompt: "<p>Count the number of vibrations you feel </p>",
+        prompt: "<p class='instruction'>Count the number of vibrations you feel </p>",
         trial_duration: 7000+500,
         on_start: function () {
             navigator.vibrate([1,TIME_BEFORE_VIBRATE_IN_MS,70,1634,70,1634,70,1634,70,1634]);
@@ -233,7 +301,7 @@
     };
     var check_train = {
         type: 'html-button-response',
-        stimulus: '<p>How many vibrations did you feel?</p>',
+        stimulus: "<p class='instruction'>How many vibrations did you feel?</p>",
         choices: ['0','1', '2','3','4','5','6','7','8','9','10'],
         prompt: ""
     };
@@ -285,7 +353,7 @@
     //----------------------------------------//
     var natural_rythom_instruction = {
       type: 'html-button-response',
-      stimulus: '<h3>We will now ask you to tap regularly at a comfortable tempo.</h3><h3>you will tap for 1 minute.</h3>',
+      stimulus: '<p class="instruction">We will now ask you to tap with your index finger at a comfortable tempo, and to keep the tempo <b>constant</b>.</p><p class="instruction">you will tap for 1 minute.</p>',
         choices: ['Ready?']
     };
     var natural_rythom = {
@@ -318,19 +386,7 @@
         }
         return array_stamps;
     }
-    // function get_average_interval(array_stamps)
-    // {
-    //     //calculate average interval
-    //     var avg = 0;
-    //     for(var i = 0; i < array_stamps.length-1; i++)
-    //     {
-    //         avg += array_stamps[i+1]-array_stamps[i];
-    //         // alert(avg);
-    //     }
-    //     avg = avg/array_stamps.length;
-    //     // alert(avg);
-    //     return avg;
-    // }
+
     function read_time_stamps_from_data(data) {
         var data = jsPsych.data.getLastTrialData();
         var jsonData = data.json();
@@ -399,7 +455,7 @@
         },
         stimulus: 'new_sounds/SOA_tactile_with_pink1.wav',
         choices: ['Tap'],
-        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio: true,
         data: {modality:'1',practice:'0',trial_tempo:'200'},
     };
@@ -408,7 +464,7 @@
         type: 'function-tap',
         stimulus: 'new_sounds/SOA_tactile_with_pink2.wav',
         choices: ['Tap'],
-        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio:true,
         data: {modality:'1',practice:'0',trial_tempo:'341'},
         on_start: function () {
@@ -424,7 +480,7 @@
         type: 'function-tap',
         stimulus: 'new_sounds/SOA_tactile_with_pink3.wav',
         choices: ['Tap'],
-        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio:true,
         data: {modality:'1',practice:'0',trial_tempo:'583'},
         on_start: function () {
@@ -440,7 +496,7 @@
         type: 'function-tap',
         stimulus: 'new_sounds/SOA_tactile_with_pink4.wav',
         choices: ['Tap'],
-        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio:true,
         data: {modality:'1',practice:'0',trial_tempo:'997'},
         on_start: function () {
@@ -456,7 +512,7 @@
         type: 'function-tap',
         stimulus: 'new_sounds/SOA_tactile_with_pink5.wav',
         choices: ['Tap'],
-        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio:true,
         data: {modality:'1',practice:'0',trial_tempo:'1704'},
         on_start: function () {
@@ -490,7 +546,7 @@
         stimulus: 'new_sounds/SOA_auditory_with_pink1.wav',
         choices: ['Tap'],
         data: {modality:'0',practice:'0',trial_tempo:'200'},
-        prompt: "<p>try tapping on the button with the same tempo </p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start:function () {
             var event = new Event('build');
@@ -504,7 +560,7 @@
         stimulus: 'new_sounds/SOA_auditory_with_pink2.wav',
         choices: ['Tap'],
         data: {modality:'0',practice:'0',trial_tempo:'341'},
-        prompt: "<p>try tapping on the button with the same tempo </p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start:function () {
             var event = new Event('build');
@@ -518,7 +574,7 @@
         stimulus: 'new_sounds/SOA_auditory_with_pink3.wav',
         choices: ['Tap'],
         data: {modality:'0',practice:'0',trial_tempo:'583'},
-        prompt: "<p>try tapping on the button with the same tempo </p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start: function () {
             var event = new Event('build');
@@ -532,7 +588,7 @@
         stimulus: 'new_sounds/SOA_auditory_with_pink4.wav',
         choices: ['Tap'],
         data: {modality:'0',practice:'0',trial_tempo:'997'},
-        prompt: "<p>try tapping on the button with the same tempo </p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start: function () {
             var event = new Event('build');
@@ -546,7 +602,7 @@
         stimulus: 'new_sounds/SOA_auditory_with_pink5.wav',
         choices: ['Tap'],
         data: {modality:'0',practice:'0',trial_tempo:'1704'},
-        prompt: "<p>try tapping on the button with the same tempo </p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start: function () {
             var event = new Event('build');
@@ -576,7 +632,7 @@
         type: 'function-tap',
         stimulus: 'new_sounds/short_tactile_with_pink2.wav',
         choices: ['Tap'],
-        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio:true,
         data: {modality:'1',practice:'1',trial_tempo:'341'},
         on_start: function () {
@@ -592,7 +648,7 @@
         type: 'function-tap',
         stimulus: 'new_sounds/short_tactile_with_pink3.wav',
         choices: ['Tap'],
-        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio:true,
         data: {modality:'1',practice:'1',trial_tempo:'583'},
         on_start: function () {
@@ -609,7 +665,7 @@
         type: 'function-tap',
         stimulus: 'new_sounds/short_tactile_with_pink4.wav',
         choices: ['Tap'],
-        prompt: "<p>when the vibration is over, try tapping on the button with the same tempo</p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
         trial_ends_after_audio:true,
         data: {modality:'1',practice:'1',trial_tempo:'997'},
         on_start: function () {
@@ -625,7 +681,7 @@
         stimulus: 'new_sounds/short_auditory_with_pink2.wav',
         choices: ['Tap'],
         data: {modality:'0',practice:'1',trial_tempo:'341'},
-        prompt: "<p>try tapping on the button with the same tempo </p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start:function () {
             var event = new Event('build');
@@ -639,7 +695,7 @@
         stimulus: 'new_sounds/short_auditory_with_pink3.wav',
         choices: ['Tap'],
         data: {modality:'0',practice:'1',trial_tempo:'583'},
-        prompt: "<p>try tapping on the button with the same tempo </p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start: function () {
             var event = new Event('build');
@@ -653,7 +709,7 @@
         stimulus: 'new_sounds/short_auditory_with_pink4.wav',
         choices: ['Tap'],
         data: {modality:'0',practice:'1',trial_tempo:'997'},
-        prompt: "<p>try tapping on the button with the same tempo </p>",
+        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
         trial_ends_after_audio: true,
         on_start: function () {
             var event = new Event('build');
@@ -851,7 +907,10 @@
 
     ///-------------------time line-------------------///
     var timeline = [];
-    timeline.push(instruction_procedure);
+    timeline.push(consent);
+    timeline.push(app_instructions);
+    timeline.push(first_instructions);
+    // timeline.push(instruction_procedure);
     timeline.push(natural_rythom_instruction);
     timeline.push(natural_rythom);
     //קריינות
@@ -902,30 +961,30 @@
     }
 
     // init for JATOS
-    jatos.onLoad(function() {
-        jsPsych.init({
-            timeline: timeline,
-            preload_audio: audio,
-            preload_images: images,
-            on_finish: function () {
-                exp_complited = 1;
-                save_on_finish();
-                jsPsych.endExperiment();
-            }
-        });
-    });
+    // jatos.onLoad(function() {
+    //     jsPsych.init({
+    //         timeline: timeline,
+    //         preload_audio: audio,
+    //         preload_images: images,
+    //         on_finish: function () {
+    //             exp_complited = 1;
+    //             save_on_finish();
+    //             jsPsych.endExperiment();
+    //         }
+    //     });
+    // });
 
     // init for github(w/o saving)
-    // jsPsych.init({
-    //     timeline: timeline,
-    //     preload_audio: audio,
-    //     preload_images: images,
-    //     on_finish: function () {
-    //         exp_completed = 1;
-    //         jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
-    //         // saveData(subject_id, jsPsych.data.get().csv());
-    //     }
-    // });
+    jsPsych.init({
+        timeline: timeline,
+        preload_audio: audio,
+        preload_images: images,
+        on_finish: function () {
+            exp_completed = 1;
+            jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
+            // saveData(subject_id, jsPsych.data.get().csv());
+        }
+    });
 
 </script>
 </body>
