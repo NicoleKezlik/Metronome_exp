@@ -215,7 +215,7 @@
             'receive feedback during the experiment.</p><p class="instruction">To begin the experiment, press “Continue”</p><br>',
         choices: ['continue'],
         on_finish: function () {
-            save_on_finish();
+            // save_on_finish();
         }
     };
 
@@ -224,7 +224,7 @@
       stimulus: '<h1>End of expriment</h1><br><p class=\'instruction\'>We would appreciate it if you could fill out the following form</p>',
         choices: ['To the form'],
         on_finish: function () {
-            save_on_finish();
+            // save_on_finish();
         }
     };
 
@@ -234,7 +234,7 @@
           ' instead of hearing it</p>',
       choices: ['continue'],
         on_finish: function () {
-            save_on_finish();
+            // save_on_finish();
       }
     };
 
@@ -244,7 +244,7 @@
             ' instead of feeling it</p>',
         choices: ['continue'],
         on_finish: function () {
-            save_on_finish();
+            // save_on_finish();
         }
     };
 
@@ -263,7 +263,7 @@
 			exp_completed = 1;
             jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
             // saveData(subject_id, jsPsych.data.get().csv());
-            save_on_finish();
+            // save_on_finish();
 		}
     };
     /////////////////////////////////////////
@@ -362,7 +362,7 @@
         choices: ['Tap'],
         trial_duration: 60000,
         on_finish: function () {
-            save_on_finish();
+            // save_on_finish();
         }
     };
     ///////////////////////////////////////////////
@@ -847,7 +847,7 @@
             problems:responses.Q8});
             // saveData(subject_id, jsPsych.data.get().csv());
             exp_complited = 1;
-            save_on_finish();
+            // save_on_finish();
         }
     };
 
@@ -869,7 +869,7 @@
             var responses = JSON.parse(jsonData[0].responses);
             jsPsych.data.addProperties({switch_application:responses.Q0,screen_protector:responses.Q1,dominant_hand:responses.Q2,adhd:responses.Q3});
             // saveData(subject_id, jsPsych.data.get().csv());
-            save_on_finish();
+            // save_on_finish();
         }
     };
     //////////////////////////////////////////////////////////////
