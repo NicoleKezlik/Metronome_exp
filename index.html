@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Metronom2</title>
-<!--    comment jatos for run in github    -->
+<!--    comment jatos, init for jatos and all "save on finish" for run in github    -->
 <!--    <script src="jatos.js"></script>-->
     <script src="jspsych-6.0.5/jspsych.js"></script>
     <script src="jspsych-6.1.0/plugins/jspsych-instructions.js"></script>
@@ -25,11 +25,11 @@
         /*top: 10%;*/
         /*left: 20%;*/
         /*font-size: 4vw;*/
-        font-size: 2rem;
+        font-size: 3em;
         /*max-width: 100%;*/
         margin-left: 10%;
         margin-right: 10%;
-        line-height: 110%;
+        line-height: 1.2em;
         /*text-align: left;*/
         /*font-weight: bold;*/
     }
@@ -41,6 +41,20 @@
         margin-left: 5px;
         text-align: center;
     }
+    a{font-size: 3em}
+    /*.grid-container {*/
+    /*    display: grid;*/
+    /*    grid-template-columns: auto auto;*/
+        /*background-color: #2196F3;*/
+        /*padding: 10px;*/
+    /*}*/
+    /*.grid-item {*/
+        /*background-color: rgba(255, 255, 255, 0.8);*/
+        /*border: 1px solid rgba(0, 0, 0, 0.8);*/
+        /*padding: 4rem;*/
+        /*font-size: 30px;*/
+        /*text-align: center;*/
+    /*}*/
 </style>
 <body>
 <script>
@@ -53,20 +67,24 @@
     NUM_STIMULI_TRAIN = 5;
     CONTRA_BALANCE = Math.round(Math.random()); // 0 auditory block is first, 1 tactile block is first
     // CONTRA_BALANCE = 1;
-    var tactile_train_success = 0;
-    var current_response = 6;
     var tempo_start = 0;
     var tempo = 0;
     var train_succeed_in_row = 0;
     var train_num = 0;
     var one_correct = false;
     var exp_completed = 0;
+    string_trial = "<p class='instruction'>Continue tapping till you hear a break in the background noise</p>";
     AUDIO_PATH = "new_sounds/SOA_auditory_with_pink";
     TACTILE_PATH = "new_sounds/SOA_tactile_with_pink";
     AUDIO_TRAIN_PATH = "new_sounds/short_auditory_with_pink";
     TACTILE_TRAIN_PATH = "new_sounds/short_tactile_with_pink";
     TYPE = ".wav";
     audio = [];
+    audio.push("new_sounds/sit_as_picture.wav");
+    audio.push("new_sounds/tactile_with_silence1.wav");
+    audio.push("new_sounds/tactile_with_silence3.wav");
+    audio.push("new_sounds/tactile_with_silence5.wav");
+    audio.push("new_sounds/auditory_with_pink3.wav");
     for(var i = 1; i<6; i++)
     {
         audio.push(AUDIO_PATH+i+TYPE);
@@ -75,7 +93,7 @@
         audio.push(TACTILE_TRAIN_PATH+i+TYPE);
     }
     images = [];
-    images.push("images/volume_middle_horizontal.png");
+    images.push("images/volume_middle_horizontal.jpg");
     images.push("images/model.jpeg");
     images.push("images/1.jpg");
     images.push("images/2.jpg");
@@ -130,18 +148,18 @@
     var first_instructions = {
         type: 'instructions',
         pages: [
-            '<h1>Hello and welcome to our experiment</h1><p class="instruction">Please follow the instructions carefully ' +
-    'This experiment is approx.20 min long. ' +
-    'This experiment is to be completed to the end with no breaks.\n' +
+            '<h1>Hello and welcome to our experiment</h1><p class="instruction">Please follow the instructions carefully.<br>' +
+    'This experiment is approx.20 min long.<br>' +
+    'This experiment is to be completed to the end with no breaks.<br>' +
     'When you are ready to proceed, press “Next”</p>',
             '<p class="instruction">Please take a few seconds to close any applications that may be running in the background</p>',
             '<p class="instruction">The experiment will last approx.20 min, please make sure you are sitting comfortably.</p>',
             '<p class="instruction">Please make sure you are sitting in a quiet area with no disturbances</p>',
-            '<p class="instruction">Please remove your phone’s protective case (if you have one)</p>',
-            '<p class="instruction">Please hold your phone in your non-dominant hand. It is recommended that you extend your arm.</p><p class="instruction"> You can support your ' +
-                    'elbow on an arm rest or place your hand on a soft surface.\n Please do not switch hands for the duration of the experiment</p>',
-            '<p class="instruction">Please connect a set of headphones/earphones and make sure they are sitting comfortably in both ears</p>',
-            '<p class="instruction">Please make sure your phone is on sound (NOT on silent mode\\vibrate-only\\’do not disturb’)</p>',
+            '<p class="instruction">Please remove your phone’s protective case<br>(if you have one)</p>',
+            '<p class="instruction">Please hold your phone in your <u>non</u>-dominant hand. It is recommended that you extend your arm.</p><p class="instruction"> You can support your ' +
+                    'elbow on an arm rest or place your hand on a soft surface or a pillow.<br>Please do not switch hands for the duration of the experiment</p>',
+            '<p class="instruction">Please connect a set of headphones / earphone.<br> Make sure they are sitting comfortably in both ears.</p>',
+            '<p class="instruction">Please make sure your phone is NOT on "silent","vibrate-only" or "do not disturb" mode.<br>Please leave the sound ON</p>',
             '<p class="instruction">Please set your phone’s volume to the middle of the sound bar </p>'
         ],
         show_clickable_nav: true,
@@ -185,7 +203,7 @@
         type: 'html-button-response',
         stimulus: "<h3>Volume Adjustment</h3><p class='instruction'>During the experiment there will be background noise. Let's adjust the volume to a level that will be comfortable" +
             "for you. Please adjust your volume to the center of your sound bar" +
-            "</p><img src='images/volume_middle_horizontal.png'><br>",
+            "</p><img src='images/volume_middle_horizontal.jpg'><br>",
         choices: ['continue'],
     };
 
@@ -193,8 +211,8 @@
       type: 'audio-button-response',
       stimulus: 'new_sounds/auditory_with_pink3.wav',
       choices: ['OK'],
-      prompt: "<p class='instruction'>Raise or lower your volume to a level that is comfortable for you. The sound should be clearly audible" +
-          "When the volume is adjusted to a comfortable level, press 'OK'</p>"
+      prompt: "<p class='instruction'>Raise or lower your volume to a level that is comfortable for you.<br>The sound should be clearly audible" +
+          "<br>When the volume is adjusted to a comfortable level, press 'OK'</p>"
     };
 
     var form_trial = {
@@ -209,9 +227,21 @@
 
     var start_train_instruction = {
       type: 'html-button-response',
-      stimulus: '<p class="instruction">Great!</p><p class="instruction">We will now begin with a short practice run and then move on to the' +
+      stimulus: '<p class="instruction"><strong>Great!</strong></p><p class="instruction">We will now begin with a short practice run and then move on to the' +
           ' experiment</p>',
         choices: ['continue']
+    };
+
+    var tactile_train_exp_instruction = {
+      type: 'html-button-response',
+      stimulus:'<p class="instruction">Shortly, you will begin to feel your phone vibrate at a certain beat.<br>Simultaneously, a button will show on your screen.<br>Please start pressing the button, as soon as you can, to match the beat of the vibrations.<br>Keep pressing at the same beat after the vibrations stop.<br><strong>During the practice run you will receive feedback for your performance on this task.<br>The experiment will be similar to the practice runs, but you will not receive feedback</strong></p>',
+        choices:['continue']
+    };
+
+    var audio_train_exp_instruction = {
+        type: 'html-button-response',
+        stimulus:'<p class="instruction">Shortly, you will begin to hear a certain beat.<br>Simultaneously, a button will show on your screen.<br>Please start pressing the button, as soon as you can, to match the beat you hear.<br>Keep pressing at the same beat after the tempo stops.<br><strong>During the practice run you will receive feedback for your performance on this task.<br>The experiment will be similar to the practice runs, but you will not receive feedback</strong></p>',
+        choices:['continue']
     };
 
     var end_train_instruction = {
@@ -220,36 +250,36 @@
             'receive feedback during the experiment.</p><p class="instruction">To begin the experiment, press “Continue”</p><br>',
         choices: ['continue'],
         on_finish: function () {
-            // save_on_finish();
+            save_on_finish();
         }
     };
 
     var exp_to_form = {
       type: "html-button-response",
-      stimulus: '<h1>End of expriment</h1><br><p class=\'instruction\'>We would appreciate it if you could fill out the following form</p>',
+      stimulus: '<h1>We are almost done!</h1><br><p class=\'instruction\'>Please fill out a brief form next</p>',
         choices: ['To the form'],
         on_finish: function () {
-            // save_on_finish();
+            save_on_finish();
         }
     };
 
     var between_blocks_to_tactile = {
       type: "html-button-response",
-      stimulus: '<p class="instruction">Good job!</p><p class="instruction">you finished half of the experiment</p><p class=\'instruction\'>now you will feeling a tempo' +
+      stimulus: '<p class="instruction"><strong>Good job!</strong></p><p class="instruction">you finished half of the experiment</p><p class=\'instruction\'>now you will be<strong>feeling</strong> a tempo' +
           ' instead of hearing it</p>',
       choices: ['continue'],
         on_finish: function () {
-            // save_on_finish();
+            save_on_finish();
       }
     };
 
     var between_blocks_to_auditory = {
         type: "html-button-response",
-        stimulus: '<p class=\'instruction\'>Good job!</p><p class=\'instruction\'>you finished half of the experiment</p><p class=\'instruction\'>now you will hear a tempo' +
+        stimulus: '<p class=\'instruction\'><strong>Good job!</strong></p><p class=\'instruction\'>you finished half of the experiment</p><p class=\'instruction\'>now you will be<strong>hearing</strong> a tempo' +
             ' instead of feeling it</p>',
         choices: ['continue'],
         on_finish: function () {
-            // save_on_finish();
+            save_on_finish();
         }
     };
 
@@ -262,13 +292,13 @@
 
     var finished = {
         type: 'html-button-response',
-        stimulus: '<p class="instruction">You have finished the experiment</p><p class="instruction">Thank you</p>',
+        stimulus: '<p class="instruction">congratulations! You have finished the experiment</p><p class="instruction">Thank you</p>',
         choices: ['Continue'],
 		on_finish: function(){
 			exp_completed = 1;
             jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
             // saveData(subject_id, jsPsych.data.get().csv());
-            // save_on_finish();
+            save_on_finish();
 		}
     };
     /////////////////////////////////////////
@@ -284,12 +314,12 @@
             navigator.vibrate([1,TIME_BEFORE_VIBRATE_IN_MS,70,517,70,517,70,517,70,517,70,517,70,517]);
         }
     };
-    var first_tempo_200_train_9_vibes = {
+    var second_tempo_341_train_9_vibes = {
         type: 'function-tap',
-        stimulus: 'new_sounds/tactile_with_silence1.wav',
+        stimulus: 'new_sounds/tactile_with_silence2.wav',
         choices: [],
         prompt: "<p class='instruction'>Count the number of vibrations you feel </p>",
-        trial_duration: 2800+500,
+        trial_duration: 4096+500,
         on_start: function () {
             navigator.vibrate([1,TIME_BEFORE_VIBRATE_IN_MS,70,130,70,130,70,130,70,130,70,130,70,130,70,130,70,130,70,130]);
         }
@@ -308,9 +338,11 @@
         type: 'html-button-response',
         stimulus: "<p class='instruction'>How many vibrations did you feel?</p>",
         choices: ['0','1', '2','3','4','5','6','7','8','9','10'],
-        prompt: ""
+        button_html: '<button class="jspsych-btn" style="padding: 1.2em">%choice%</button>',
+        prompt: "",
+        margin_horizontal: "2rem",
+        margin_vertical: "2rem"
     };
-
 
     var loop_node = {
         timeline: [third_tempo_583_train_6_vibes,check_train],
@@ -323,11 +355,39 @@
             {
                 alert("please make sure your phone is not muted")
             }
+            if(responses !== 6)
+            {
+                alert("it is not the correct answer, please try again")
+            }else
+            {
+                alert("correct!");
+            }
             return responses!==6;
         }
     };
-    var loop_node2 = {
-        timeline: [loop_node,first_tempo_200_train_9_vibes,check_train],
+    // var loop_node2 = {
+    //     timeline: [loop_node,second_tempo_341_train_9_vibes,check_train],
+    //     loop_function: function(data){
+    //         var data = jsPsych.data.getLastTrialData();
+    //         var jsonData = data.json();
+    //         jsonData = JSON.parse(jsonData);
+    //         var responses = JSON.parse(jsonData[0].button_pressed);
+    //         if(responses===0)
+    //         {
+    //             alert("please make sure your phone is not muted")
+    //         }
+    //         if(responses !== 9)
+    //         {
+    //             alert("it is not the correct answer, please try again")
+    //         }else
+    //         {
+    //             alert("correct!");
+    //         }
+    //         return responses!==9;
+    //     }
+    // };
+    var loop_node3 = {
+        timeline: [loop_node,fifth_tempo_1704_train_4_vibes,check_train],
         loop_function: function(data){
             var data = jsPsych.data.getLastTrialData();
             var jsonData = data.json();
@@ -337,19 +397,12 @@
             {
                 alert("please make sure your phone is not muted")
             }
-            return responses!==9;
-        }
-    };
-    var loop_node3 = {
-        timeline: [loop_node2,fifth_tempo_1704_train_4_vibes,check_train],
-        loop_function: function(data){
-            var data = jsPsych.data.getLastTrialData();
-            var jsonData = data.json();
-            jsonData = JSON.parse(jsonData);
-            var responses = JSON.parse(jsonData[0].button_pressed);
-            if(responses===0)
+            if(responses !== 4)
             {
-                alert("please make sure your phone is not muted")
+                alert("it is not the correct answer, please try again")
+            }else
+            {
+                alert("correct!");
             }
             return responses!==4;
         }
@@ -364,10 +417,10 @@
     var natural_rythom = {
         type: 'function-tap',
         stimulus: 'new_sounds/tactile_with_silence5.wav',
-        choices: ['Tap'],
+        choices: ['Tap<br>Here'],
         trial_duration: 60000,
         on_finish: function () {
-            // save_on_finish();
+            save_on_finish();
         }
     };
     ///////////////////////////////////////////////
@@ -459,8 +512,8 @@
             navigator.vibrate(tempos_arrays[0]);
         },
         stimulus: 'new_sounds/SOA_tactile_with_pink1.wav',
-        choices: ['Tap'],
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
+        choices: ['Tap<br>Here'],
+        prompt: string_trial,
         trial_ends_after_audio: true,
         data: {modality:'1',practice:'0',trial_tempo:'200'},
     };
@@ -468,8 +521,8 @@
     var second_tempo_341 = {
         type: 'function-tap',
         stimulus: 'new_sounds/SOA_tactile_with_pink2.wav',
-        choices: ['Tap'],
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
+        choices: ['Tap<br>Here'],
+        prompt: string_trial,
         trial_ends_after_audio:true,
         data: {modality:'1',practice:'0',trial_tempo:'341'},
         on_start: function () {
@@ -484,8 +537,8 @@
     var third_tempo_583 = {
         type: 'function-tap',
         stimulus: 'new_sounds/SOA_tactile_with_pink3.wav',
-        choices: ['Tap'],
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
+        choices: ['Tap<br>Here'],
+        prompt: string_trial,
         trial_ends_after_audio:true,
         data: {modality:'1',practice:'0',trial_tempo:'583'},
         on_start: function () {
@@ -500,8 +553,8 @@
     var forth_tempo_997 = {
         type: 'function-tap',
         stimulus: 'new_sounds/SOA_tactile_with_pink4.wav',
-        choices: ['Tap'],
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
+        choices: ['Tap<br>Here'],
+        prompt: string_trial,
         trial_ends_after_audio:true,
         data: {modality:'1',practice:'0',trial_tempo:'997'},
         on_start: function () {
@@ -516,8 +569,8 @@
     var fifth_tempo_1704 = {
         type: 'function-tap',
         stimulus: 'new_sounds/SOA_tactile_with_pink5.wav',
-        choices: ['Tap'],
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
+        choices: ['Tap<br>Here'],
+        prompt: string_trial,
         trial_ends_after_audio:true,
         data: {modality:'1',practice:'0',trial_tempo:'1704'},
         on_start: function () {
@@ -549,9 +602,9 @@
     var first_auditory_200_pink = {
         type: 'function-tap',
         stimulus: 'new_sounds/SOA_auditory_with_pink1.wav',
-        choices: ['Tap'],
+        choices: ['Tap<br>Here'],
         data: {modality:'0',practice:'0',trial_tempo:'200'},
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
+        prompt: string_trial,
         trial_ends_after_audio: true,
         on_start:function () {
             var event = new Event('build');
@@ -563,9 +616,9 @@
     var second_auditory_341 = {
         type: 'function-tap',
         stimulus: 'new_sounds/SOA_auditory_with_pink2.wav',
-        choices: ['Tap'],
+        choices: ['Tap<br>Here'],
         data: {modality:'0',practice:'0',trial_tempo:'341'},
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
+        prompt: string_trial,
         trial_ends_after_audio: true,
         on_start:function () {
             var event = new Event('build');
@@ -577,9 +630,9 @@
     var third_auditory_583 = {
         type: 'function-tap',
         stimulus: 'new_sounds/SOA_auditory_with_pink3.wav',
-        choices: ['Tap'],
+        choices: ['Tap<br>Here'],
         data: {modality:'0',practice:'0',trial_tempo:'583'},
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
+        prompt: string_trial,
         trial_ends_after_audio: true,
         on_start: function () {
             var event = new Event('build');
@@ -591,9 +644,9 @@
     var forth_auditory_997 = {
         type: 'function-tap',
         stimulus: 'new_sounds/SOA_auditory_with_pink4.wav',
-        choices: ['Tap'],
+        choices: ['Tap<br>Here'],
         data: {modality:'0',practice:'0',trial_tempo:'997'},
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
+        prompt: string_trial,
         trial_ends_after_audio: true,
         on_start: function () {
             var event = new Event('build');
@@ -605,9 +658,9 @@
     var fifth_auditory_1704 = {
         type: 'function-tap',
         stimulus: 'new_sounds/SOA_auditory_with_pink5.wav',
-        choices: ['Tap'],
+        choices: ['Tap<br>Here'],
         data: {modality:'0',practice:'0',trial_tempo:'1704'},
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
+        prompt: string_trial,
         trial_ends_after_audio: true,
         on_start: function () {
             var event = new Event('build');
@@ -636,8 +689,8 @@
     var second_tempo_341_train = {
         type: 'function-tap',
         stimulus: 'new_sounds/short_tactile_with_pink2.wav',
-        choices: ['Tap'],
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
+        choices: ['Tap<br>Here'],
+        prompt: string_trial,
         trial_ends_after_audio:true,
         data: {modality:'1',practice:'1',trial_tempo:'341'},
         on_start: function () {
@@ -652,8 +705,8 @@
     var third_tempo_583_train = {
         type: 'function-tap',
         stimulus: 'new_sounds/short_tactile_with_pink3.wav',
-        choices: ['Tap'],
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
+        choices: ['Tap<br>Here'],
+        prompt: string_trial,
         trial_ends_after_audio:true,
         data: {modality:'1',practice:'1',trial_tempo:'583'},
         on_start: function () {
@@ -669,8 +722,8 @@
     var forth_tempo_997_train = {
         type: 'function-tap',
         stimulus: 'new_sounds/short_tactile_with_pink4.wav',
-        choices: ['Tap'],
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo</p>",
+        choices: ['Tap<br>Here'],
+        prompt: string_trial,
         trial_ends_after_audio:true,
         data: {modality:'1',practice:'1',trial_tempo:'997'},
         on_start: function () {
@@ -684,9 +737,9 @@
     var second_auditory_341_train = {
         type: 'function-tap',
         stimulus: 'new_sounds/short_auditory_with_pink2.wav',
-        choices: ['Tap'],
+        choices: ['Tap<br>Here'],
         data: {modality:'0',practice:'1',trial_tempo:'341'},
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
+        prompt: string_trial,
         trial_ends_after_audio: true,
         on_start:function () {
             var event = new Event('build');
@@ -698,9 +751,9 @@
     var third_auditory_583_train = {
         type: 'function-tap',
         stimulus: 'new_sounds/short_auditory_with_pink3.wav',
-        choices: ['Tap'],
+        choices: ['Tap<br>Here'],
         data: {modality:'0',practice:'1',trial_tempo:'583'},
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
+        prompt: string_trial,
         trial_ends_after_audio: true,
         on_start: function () {
             var event = new Event('build');
@@ -712,9 +765,9 @@
     var forth_auditory_997_train = {
         type: 'function-tap',
         stimulus: 'new_sounds/short_auditory_with_pink4.wav',
-        choices: ['Tap'],
+        choices: ['Tap<br>Here'],
         data: {modality:'0',practice:'1',trial_tempo:'997'},
-        prompt: "<p class='instruction'>try tapping on the button with the same tempo </p>",
+        prompt: string_trial,
         trial_ends_after_audio: true,
         on_start: function () {
             var event = new Event('build');
@@ -852,7 +905,7 @@
             problems:responses.Q8});
             // saveData(subject_id, jsPsych.data.get().csv());
             exp_complited = 1;
-            // save_on_finish();
+            save_on_finish();
         }
     };
 
@@ -874,7 +927,7 @@
             var responses = JSON.parse(jsonData[0].responses);
             jsPsych.data.addProperties({switch_application:responses.Q0,screen_protector:responses.Q1,dominant_hand:responses.Q2,adhd:responses.Q3});
             // saveData(subject_id, jsPsych.data.get().csv());
-            // save_on_finish();
+            save_on_finish();
         }
     };
     //////////////////////////////////////////////////////////////
@@ -915,7 +968,6 @@
     timeline.push(consent);
     timeline.push(app_instructions);
     timeline.push(first_instructions);
-    // timeline.push(instruction_procedure);
     timeline.push(natural_rythom_instruction);
     timeline.push(natural_rythom);
     //קריינות
@@ -927,26 +979,26 @@
     if(CONTRA_BALANCE === 0)
     {
         timeline.push(start_train_instruction);
-        //קריינות?
+        timeline.push(audio_train_exp_instruction);
         push_auditory_train();
         timeline.push(end_train_instruction);
         push_auditory();
         timeline.push(between_blocks_to_tactile);
         timeline.push(start_train_instruction);
-        //קריינות?
+        timeline.push(tactile_train_exp_instruction);
         push_tactile_train();
         timeline.push(end_train_instruction);
         push_tactile();
     }
     else {
         timeline.push(start_train_instruction);
-        //קריינות?
+        timeline.push(tactile_train_exp_instruction);
         push_tactile_train();
         timeline.push(end_train_instruction);
         push_tactile();
         timeline.push(between_blocks_to_auditory);
         timeline.push(start_train_instruction);
-        //קריינות?
+        timeline.push(audio_train_exp_instruction);
         push_auditory_train();
         timeline.push(end_train_instruction);
         push_auditory();
@@ -960,9 +1012,9 @@
 
     function save_on_finish()
     {
-        jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
-        var resultJson = jsPsych.data.get().json();
-        jatos.submitResultData(resultJson);
+        // jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
+        // var resultJson = jsPsych.data.get().json();
+        // jatos.submitResultData(resultJson);
     }
 
     // init for JATOS
