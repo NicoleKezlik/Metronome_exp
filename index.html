@@ -41,6 +41,12 @@
         margin-left: 5px;
         text-align: center;
     }
+    .responsive{
+        /*width: 100%;*/
+        max-height: 50em;
+        /*max-height: 1111px;*/
+        width: auto;
+    }
     a{font-size: 3em}
     /*.grid-container {*/
     /*    display: grid;*/
@@ -95,11 +101,11 @@
     images = [];
     images.push("images/volume_middle_horizontal.jpg");
     images.push("images/model.jpeg");
-    images.push("images/1.jpg");
-    images.push("images/2.jpg");
-    images.push("images/3.jpg");
-    images.push("images/4.jpg");
-    images.push("images/5.jpg");
+    images.push("images/1.jpeg");
+    images.push("images/2.jpeg");
+    images.push("images/3.jpeg");
+    images.push("images/4.jpeg");
+    images.push("images/6.jpeg");
 
 
     //-----saving data-----//
@@ -125,6 +131,7 @@
         return false;
     };
 
+
     var consent = {
         type:'external-html',
         url: "consent_form.html",
@@ -136,11 +143,11 @@
         type: 'instructions',
         pages: [
             '<p class="instruction">Please download "Gamemode" app, to avoid getting notification during the experiment.</p> <a href=https://play.google.com/store/apps/details?id=com.blocknotification.gamemode>Gamemode download</a>',
-            '<p class="instruction">Here is how to activate the app: </p><img src="images/1.jpg" style="max-width: 80%">',
-            '<img src="images/2.jpg" style="max-width: 80%">',
-            '<img src="images/3.jpg" style="max-width: 80%">',
-            '<img src="images/4.jpg" style="max-width: 80%">',
-            '<img src="images/5.jpg" style="max-width: 80%">'
+            '<p class="instruction">Here is how to activate the app: </p><img src="images/1.jpeg" class="responsive">',
+            '<img src="images/2.jpeg" class="responsive">',
+            '<img src="images/3.jpeg" class="responsive">',
+            '<img src="images/4.jpeg" class="responsive">',
+            '<img src="images/6.jpeg" class="responsive">'
         ],
         show_clickable_nav: true
     };
@@ -148,9 +155,9 @@
     var first_instructions = {
         type: 'instructions',
         pages: [
-            '<h1>Hello and welcome to our experiment</h1><p class="instruction">Please follow the instructions carefully.<br>' +
-    'This experiment is approx.20 min long.<br>' +
-    'This experiment is to be completed to the end with no breaks.<br>' +
+            '<h1>Hello and welcome to our experiment</h1><p class="instruction">Please follow the instructions carefully.<br><br>' +
+    'This experiment is approx.20 min long.<br><br>' +
+    'This experiment is to be completed to the end with no breaks.<br><br>' +
     'When you are ready to proceed, press “Next”</p>',
             '<p class="instruction">Please take a few seconds to close any applications that may be running in the background</p>',
             '<p class="instruction">The experiment will last approx.20 min, please make sure you are sitting comfortably.</p>',
@@ -215,14 +222,28 @@
           "<br>When the volume is adjusted to a comfortable level, press 'OK'</p>"
     };
 
+    var check_check_box = function(elem) {
+        var check1 = document.getElementById('check1');
+        var check2 = document.getElementById('check2');
+        var check3 = document.getElementById('check3');
+        var check4 = document.getElementById('check4');
+        var check4 = document.getElementById('check5');
+        if (check1.checked && check2.checked && check3.checked && check4.checked && check5.checked) {
+            return true;
+        }
+        else {
+            alert("Please follow all the instructions and check the boxes");
+            // alert("If you wish to participate, you must check the box next to the statement 'I read and understood the above'");
+            return false;
+        }
+        return false;
+    };
+
     var form_trial = {
-        type: 'survey-html-form',
-        preamble: '<p class="instruction"> Before you begin, please check the following: </p>',
-        html: '<div style="text-align: left; margin-left: 15%; font-size: 2.5rem; line-height: 110%" ><input type="checkbox"/>  The volume is at a comfortable level' +
-            '<br><br><input type="checkbox"/>  You are in a quiet room with no disturbances' +
-            '<br><br><input type="checkbox"/>  Your phone is in your non-dominant hand and you have taken off the protective case' +
-            '<br><br><input type="checkbox"/>  There are no applications running in the background' +
-            '<br><br><input type="checkbox"/>  Your headphones/earphones are sitting comfortably in both ears<br><br></div>'
+        type:'external-html',
+        url: "check_box_instruction.html",
+        cont_btn: "Continue",
+        check_fn: check_check_box
     };
 
     var start_train_instruction = {
@@ -292,8 +313,8 @@
 
     var finished = {
         type: 'html-button-response',
-        stimulus: '<p class="instruction">congratulations! You have finished the experiment</p><p class="instruction">Thank you</p>',
-        choices: ['Continue'],
+        stimulus: "<p class='instruction' style='font-size: 4em'><strong>Congratulations!</strong></p><p class='instruction'><br> You have finished the experiment</p><p class='instruction'>Thank you</p><br><br><p class='instruction' style='font-size: 2em'>*Don't forget to turn off the 'Gamemode' application</p>",
+        choices: '',
 		on_finish: function(){
 			exp_completed = 1;
             jsPsych.data.addProperties({First_to_run:CONTRA_BALANCE,exp_end:Date.now(),exp_completed:exp_completed});
@@ -422,6 +443,12 @@
         on_finish: function () {
             save_on_finish();
         }
+    };
+
+    var natural_finish = {
+        type: 'html-button-response',
+        stimulus: '<p class="instruction"> Great job!<br><br> Now we will move on to the next stage',
+        choices: ['Continue']
     };
     ///////////////////////////////////////////////
     //---------training---------//
@@ -965,47 +992,48 @@
 
     ///-------------------time line-------------------///
     var timeline = [];
-    timeline.push(consent);
-    timeline.push(app_instructions);
-    timeline.push(first_instructions);
-    timeline.push(natural_rythom_instruction);
-    timeline.push(natural_rythom);
-    //קריינות
-    timeline.push(first_narration);
-    timeline.push(loop_node3);
-    timeline.push(volume_configuration_instruction);
-    timeline.push(volume_configuration);
-    timeline.push(form_trial);
-    if(CONTRA_BALANCE === 0)
-    {
-        timeline.push(start_train_instruction);
-        timeline.push(audio_train_exp_instruction);
-        push_auditory_train();
-        timeline.push(end_train_instruction);
-        push_auditory();
-        timeline.push(between_blocks_to_tactile);
-        timeline.push(start_train_instruction);
-        timeline.push(tactile_train_exp_instruction);
-        push_tactile_train();
-        timeline.push(end_train_instruction);
-        push_tactile();
-    }
-    else {
-        timeline.push(start_train_instruction);
-        timeline.push(tactile_train_exp_instruction);
-        push_tactile_train();
-        timeline.push(end_train_instruction);
-        push_tactile();
-        timeline.push(between_blocks_to_auditory);
-        timeline.push(start_train_instruction);
-        timeline.push(audio_train_exp_instruction);
-        push_auditory_train();
-        timeline.push(end_train_instruction);
-        push_auditory();
-    }
-    timeline.push(exp_to_form);
-    timeline.push(multi_choice_block);
-    timeline.push(free_text_Qs);
+    // timeline.push(consent);
+    // timeline.push(app_instructions);
+    // timeline.push(first_instructions);
+    // timeline.push(natural_rythom_instruction);
+    // timeline.push(natural_rythom);
+    // timeline.push(natural_finish);
+    // //קריינות
+    // timeline.push(first_narration);
+    // timeline.push(loop_node3);
+    // timeline.push(volume_configuration_instruction);
+    // timeline.push(volume_configuration);
+    // timeline.push(form_trial);
+    // if(CONTRA_BALANCE === 0)
+    // {
+    //     timeline.push(start_train_instruction);
+    //     timeline.push(audio_train_exp_instruction);
+    //     push_auditory_train();
+    //     timeline.push(end_train_instruction);
+    //     push_auditory();
+    //     timeline.push(between_blocks_to_tactile);
+    //     timeline.push(start_train_instruction);
+    //     timeline.push(tactile_train_exp_instruction);
+    //     push_tactile_train();
+    //     timeline.push(end_train_instruction);
+    //     push_tactile();
+    // }
+    // else {
+    //     timeline.push(start_train_instruction);
+    //     timeline.push(tactile_train_exp_instruction);
+    //     push_tactile_train();
+    //     timeline.push(end_train_instruction);
+    //     push_tactile();
+    //     timeline.push(between_blocks_to_auditory);
+    //     timeline.push(start_train_instruction);
+    //     timeline.push(audio_train_exp_instruction);
+    //     push_auditory_train();
+    //     timeline.push(end_train_instruction);
+    //     push_auditory();
+    // }
+    // timeline.push(exp_to_form);
+    // timeline.push(multi_choice_block);
+    // timeline.push(free_text_Qs);
     timeline.push(finished);
 
     ///----------------------init----------------------///
