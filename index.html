@@ -260,13 +260,15 @@
 
     var tactile_train_exp_instruction = {
       type: 'html-button-response',
-      stimulus:'<p class="instruction">Shortly, you will begin to feel your phone vibrate at a certain beat.<br>Simultaneously, a button will show on your screen.<br>Please start pressing the button, as soon as you can, to match the beat of the vibrations.<br>Keep pressing at the same beat after the vibrations stop.<br><strong>During the practice run you will receive feedback for your performance on this task.<br>The experiment will be similar to the practice runs, but you will not receive feedback</strong></p>',
+        stimulus:'<p class="instruction">You will feel a beat.<br><br>Start tapping at the tempo of the beat immediately when the beat\n' +
+            'starts.<br><br>When the beat stops – continue tapping, at the tempo you just felt<br><br>Stop tapping only when you hear a break in the background noise</p>',
         choices:['continue']
     };
 
     var audio_train_exp_instruction = {
         type: 'html-button-response',
-        stimulus:'<p class="instruction">Shortly, you will begin to hear a certain beat.<br>Simultaneously, a button will show on your screen.<br>Please start pressing the button, as soon as you can, to match the beat you hear.<br>Keep pressing at the same beat after the tempo stops.<br><strong>During the practice run you will receive feedback for your performance on this task.<br>The experiment will be similar to the practice runs, but you will not receive feedback</strong></p>',
+        stimulus:'<p class="instruction">You will hear a beat.<br><br>Start tapping at the tempo of the beat immediately when the beat\n' +
+            'starts.<br><br>When the beat stops – continue tapping, at the tempo you just heard<br><br>Stop tapping only when you hear a break in the background noise</p>',
         choices:['continue']
     };
 
@@ -951,6 +953,20 @@
         }
     };
 
+    var bluetooth_check = {
+        type: 'survey-multi-choice',
+        questions: [{prompt: "Did you use headphones connected by wire (not bluetooth) or wireless (bluetooth)?",
+            options: ["wire","wireless"]}],
+        on_finish: function () {
+            var data = jsPsych.data.getLastTrialData();
+            var jsonData = data.json();
+            jsonData = JSON.parse(jsonData);
+            var responses = JSON.parse(jsonData[0].responses);
+            jsPsych.data.addProperties({bluetooth:responses.Q0});
+            // saveData(subject_id, jsPsych.data.get().csv());
+            save_on_finish();
+        }
+    };
     var yes_no_options = ["Yes", "No"];
     var dominant_hand_options = ["right", "left", "other"];
 
@@ -1007,23 +1023,23 @@
 
     ///-------------------time line-------------------///
     var timeline = [];
-    // timeline.push(consent);
-    // timeline.push(app_instructions);
-    // timeline.push(first_instructions);
-    // timeline.push(natural_rythom_instruction);
-    // timeline.push(natural_rythom);
-    // timeline.push(natural_finish);
-    // // //קריינות
-    // timeline.push(first_narration);
-    // timeline.push(loop_node3);
-    // timeline.push(volume_configuration_instruction);
-    // timeline.push(volume_configuration);
-    // timeline.push(form_trial);
+    timeline.push(consent);
+    timeline.push(app_instructions);
+    timeline.push(first_instructions);
+    timeline.push(natural_rythom_instruction);
+    timeline.push(natural_rythom);
+    timeline.push(natural_finish);
+    // //קריינות
+    timeline.push(first_narration);
+    timeline.push(loop_node3);
+    timeline.push(volume_configuration_instruction);
+    timeline.push(volume_configuration);
+    timeline.push(form_trial);
     if(CONTRA_BALANCE === 0)
     {
         timeline.push(start_train_instruction);
         timeline.push(audio_train_exp_instruction);
-        // push_auditory_train();
+        push_auditory_train();
         timeline.push(end_train_instruction);
         push_auditory();
         timeline.push(between_blocks_to_tactile);
@@ -1036,7 +1052,7 @@
     else {
         timeline.push(start_train_instruction);
         timeline.push(tactile_train_exp_instruction);
-        // push_tactile_train();
+        push_tactile_train();
         timeline.push(end_train_instruction);
         push_tactile();
         timeline.push(between_blocks_to_auditory);
@@ -1047,6 +1063,7 @@
         push_auditory();
     }
     timeline.push(exp_to_form);
+    timeline.push(bluetooth_check);
     timeline.push(multi_choice_block);
     timeline.push(free_text_Qs);
     timeline.push(finished);

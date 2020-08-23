@@ -55,6 +55,16 @@
   font-size: 14px;
 }
 
+/*changes*/
+.jspsych-display-element input[type="radio"] {
+  /*font-size: 2em;*/
+  height: 2.5em;
+  width: 2.5em;
+  /*line-height: 1.2em;*/
+  /*margin-top: 8em;*/
+  /*margin-left: 2em;*/
+}
+
 /* borrowing Bootstrap style for btn elements, but combining styles a bit */
 .jspsych-btn {
   display: inline-block;
