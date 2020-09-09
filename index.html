@@ -33,14 +33,6 @@
         /*text-align: left;*/
         /*font-weight: bold;*/
     }
-    .column{
-        width: 160px;
-        height: 200px;
-        background-color: #eeeeee;
-        float: left;
-        margin-left: 5px;
-        text-align: center;
-    }
     .responsive{
         /*width: 100%;*/
         max-height: 50em;
@@ -53,19 +45,6 @@
         touch-action: manipulation;
     }
     a{font-size: 3em}
-    /*.grid-container {*/
-    /*    display: grid;*/
-    /*    grid-template-columns: auto auto;*/
-        /*background-color: #2196F3;*/
-        /*padding: 10px;*/
-    /*}*/
-    /*.grid-item {*/
-        /*background-color: rgba(255, 255, 255, 0.8);*/
-        /*border: 1px solid rgba(0, 0, 0, 0.8);*/
-        /*padding: 4rem;*/
-        /*font-size: 30px;*/
-        /*text-align: center;*/
-    /*}*/
 </style>
 <body>
 <script>
@@ -84,6 +63,7 @@
     var train_num = 0;
     var one_correct = false;
     var exp_completed = 0;
+    var natural_30_remind = false;
     string_trial = "<p class='instruction'>Continue tapping till you hear a break in the background noise</p>";
     AUDIO_PATH = "new_sounds/METRONOISE1sec/SOA_auditory_with_pink";
     TACTILE_PATH = "new_sounds/METRONOISE1sec/SOA_tactile_with_pink";
@@ -144,10 +124,23 @@
         check_fn: check_consent
     };
 
+    var prolific_id = {
+        type:'survey-text',
+        questions:[{prompt:"<p class='instruction'>Please enter your Prolific id</p>",rows: 3}],
+        on_finish:function () {
+            var data = jsPsych.data.getLastTrialData();
+            var jsonData = data.json();
+            jsonData = JSON.parse(jsonData);
+            var responses = JSON.parse(jsonData[0].responses);
+            jsPsych.data.addProperties({prolific_id:responses.Q0});
+            save_on_finish();
+        }
+    };
+
     var app_instructions = {
         type: 'instructions',
         pages: [
-            "<p class='instruction'>Please download 'Gamemode' app, to avoid getting notification during the experiment.</p><p class='instruction'>this is a mandatory step</p><p class='instruction' style='color: red'>Don't use disturb/silence mode </p> <a href=https://play.google.com/store/apps/details?id=com.blocknotification.gamemode>Gamemode download</a><br>",
+            "<p class='instruction'>Please download 'Gamemode' app, to avoid getting notification during the experiment.<br><br> No private data is collected by the app</p><p class='instruction'>this is a mandatory step</p><p class='instruction' style='color: red'>Don't use do not disturb/silence mode </p> <a href=https://play.google.com/store/apps/details?id=com.blocknotification.gamemode>Gamemode download</a><br>",
             '<p class="instruction">Here is how to activate the app: </p><img src="images/1.jpeg" class="responsive">',
             '<img src="images/2.jpeg" class="responsive">',
             '<img src="images/3.jpeg" class="responsive">',
@@ -170,7 +163,7 @@
             '<p class="instruction">Please remove your phone’s protective case<br>(if you have one)</p>',
             '<p class="instruction">Please hold your phone in your <u>non</u>-dominant hand. It is recommended that you extend your arm.</p><p class="instruction"> You can support your ' +
                     'elbow on an arm rest or place your hand on a soft surface or a pillow.<br>Please do not switch hands for the duration of the experiment</p>',
-            '<p class="instruction">Please connect a set of headphones / earphone.<br> Make sure they are sitting comfortably in both ears.</p>',
+            '<p class="instruction">Please connect a set of headphones / earphones.<br> Make sure they are sitting comfortably in both ears.</p>',
             '<p class="instruction">Please make sure your phone is NOT on "silent","vibrate-only" or "do not disturb" mode.<br>Please leave the sound ON</p>',
             '<p class="instruction">Please set your phone’s volume to the middle of the sound bar </p>'
         ],
@@ -320,7 +313,7 @@
 
     var finished = {
         type: 'html-button-response',
-        stimulus: "<p class='instruction' style='font-size: 4em'><strong>Congratulations!</strong></p><p class='instruction'><br> You have finished the experiment</p><p class='instruction'>Thank you</p><br><br><p class='instruction' style='font-size: 2em'>*Don't forget to turn off the 'Gamemode' application</p>",
+        stimulus: "<p class='instruction' style='font-size: 4em'><strong>Congratulations!</strong></p><p class='instruction'><br> You have finished the experiment</p><p class='instruction'>Please copy this completion code to the prolific: 8405137D</p><p class='instruction'>Thank you</p><br><br><p class='instruction' style='font-size: 2em'>*Don't forget to turn off the 'Gamemode' application</p>",
         choices: '',
 		on_finish: function(){
 			exp_completed = 1;
@@ -449,6 +442,27 @@
         trial_duration: 60000,
         on_finish: function () {
             save_on_finish();
+        }
+    };
+
+    var natural_30_check = {
+        timeline: [natural_rythom],
+        loop_function: function () {
+            var time_stamps = read_time_stamps_from_data();
+            var array_stamps = create_array_stamps(time_stamps);
+            if((array_stamps.length < 30)&&(!natural_30_remind)){
+                alert("Let’s try again!\n" +
+                    "\n" +
+                    "Tap at the screen at a constant tempo\n" +
+                    "Choose a tempo that is comfortable for you\n" +
+                    "Keep tapping until the screen will change.\n" +
+                    "You will tap for 1 minute");
+                natural_30_remind = true;
+                return true;
+            }
+            else {
+                return false;
+            }
         }
     };
 
@@ -948,7 +962,7 @@
             musical_experience:responses.Q4,instruments:responses.Q5,metronomes_experience:responses.Q6,notification:responses.Q7,
             problems:responses.Q8});
             // saveData(subject_id, jsPsych.data.get().csv());
-            exp_complited = 1;
+            exp_completed = 1;
             save_on_finish();
         }
     };
@@ -1024,12 +1038,13 @@
     ///-------------------time line-------------------///
     var timeline = [];
     timeline.push(consent);
+    timeline.push(prolific_id);
     timeline.push(app_instructions);
     timeline.push(first_instructions);
     timeline.push(natural_rythom_instruction);
-    timeline.push(natural_rythom);
+    timeline.push(natural_30_check);
     timeline.push(natural_finish);
-    // //קריינות
+    /// // //קריינות
     timeline.push(first_narration);
     timeline.push(loop_node3);
     timeline.push(volume_configuration_instruction);

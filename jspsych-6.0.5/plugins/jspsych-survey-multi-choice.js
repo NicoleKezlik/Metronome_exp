@@ -69,7 +69,7 @@ jsPsych.plugins['survey-multi-choice'] = (function() {
       ".jspsych-survey-multi-choice-horizontal .jspsych-survey-multi-choice-text {  text-align: center;}"+
       ".jspsych-survey-multi-choice-option { line-height: 1.2; }"+
       ".jspsych-survey-multi-choice-horizontal .jspsych-survey-multi-choice-option {  display: inline-block;  margin-left: 1em;  margin-right: 1em;  vertical-align: top;}"+
-      "label.jspsych-survey-multi-choice-text input[type='radio'] {margin-right: 1em;display: inline-block;}";
+      "label.jspsych-survey-multi-choice-text input[type='radio'] {margin-right: 1em;}";
 
     display_element.querySelector('#jspsych-survey-multi-choice-css').innerHTML = cssstr;
 
