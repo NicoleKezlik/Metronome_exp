@@ -55,8 +55,8 @@
     VIBRATION_LENGTH = 70;
     NUM_STIMULI_TRIAL = 30;
     NUM_STIMULI_TRAIN = 5;
-    CONTRA_BALANCE = Math.round(Math.random()); // 0 auditory block is first, 1 tactile block is first
-    // CONTRA_BALANCE = 1;
+    // CONTRA_BALANCE = Math.round(Math.random()); // 0 auditory block is first, 1 tactile block is first
+    CONTRA_BALANCE = 1;
     var tempo_start = 0;
     var tempo = 0;
     var train_succeed_in_row = 0;
@@ -559,7 +559,7 @@
             tempo = 200;
             navigator.vibrate(tempos_arrays[0]);
         },
-        stimulus: 'new_sounds/METRONOISE1sec/SOA_tactile_with_pink1.wav',
+        // stimulus: 'new_sounds/METRONOISE1sec/SOA_tactile_with_pink1.wav',
         choices: ['Tap<br>Here'],
         // post_trial_gap: 1000,
         prompt: string_trial,
@@ -569,7 +569,7 @@
 
     var second_tempo_341 = {
         type: 'function-tap',
-        stimulus: 'new_sounds/METRONOISE1sec/SOA_tactile_with_pink2.wav',
+        // stimulus: 'new_sounds/METRONOISE1sec/SOA_tactile_with_pink2.wav',
         choices: ['Tap<br>Here'],
         // post_trial_gap: 1000,
         prompt: string_trial,
@@ -586,7 +586,7 @@
 
     var third_tempo_583 = {
         type: 'function-tap',
-        stimulus: 'new_sounds/METRONOISE1sec/SOA_tactile_with_pink3.wav',
+        // stimulus: 'new_sounds/METRONOISE1sec/SOA_tactile_with_pink3.wav',
         choices: ['Tap<br>Here'],
         post_trial_gap: 1000,
         // prompt: string_trial,
@@ -603,7 +603,7 @@
 
     var forth_tempo_997 = {
         type: 'function-tap',
-        stimulus: 'new_sounds/METRONOISE1sec/SOA_tactile_with_pink4.wav',
+        // stimulus: 'new_sounds/METRONOISE1sec/SOA_tactile_with_pink4.wav',
         choices: ['Tap<br>Here'],
         // post_trial_gap: 1000,
         prompt: string_trial,
@@ -620,7 +620,7 @@
 
     var fifth_tempo_1704 = {
         type: 'function-tap',
-        stimulus: 'new_sounds/METRONOISE1sec/SOA_tactile_with_pink5.wav',
+        // stimulus: 'new_sounds/METRONOISE1sec/SOA_tactile_with_pink5.wav',
         choices: ['Tap<br>Here'],
         // post_trial_gap: 1000,
         prompt: string_trial,
@@ -1037,19 +1037,19 @@
 
     ///-------------------time line-------------------///
     var timeline = [];
-    timeline.push(consent);
-    timeline.push(prolific_id);
-    timeline.push(app_instructions);
-    timeline.push(first_instructions);
-    timeline.push(natural_rythom_instruction);
-    timeline.push(natural_30_check);
-    timeline.push(natural_finish);
+    // timeline.push(consent);
+    // timeline.push(prolific_id);
+    // timeline.push(app_instructions);
+    // timeline.push(first_instructions);
+    // timeline.push(natural_rythom_instruction);
+    // timeline.push(natural_30_check);
+    // timeline.push(natural_finish);
     /// // //קריינות
-    timeline.push(first_narration);
-    timeline.push(loop_node3);
-    timeline.push(volume_configuration_instruction);
-    timeline.push(volume_configuration);
-    timeline.push(form_trial);
+    // timeline.push(first_narration);
+    // timeline.push(loop_node3);
+    // timeline.push(volume_configuration_instruction);
+    // timeline.push(volume_configuration);
+    // timeline.push(form_trial);
     if(CONTRA_BALANCE === 0)
     {
         timeline.push(start_train_instruction);
@@ -1065,22 +1065,22 @@
         push_tactile();
     }
     else {
-        timeline.push(start_train_instruction);
-        timeline.push(tactile_train_exp_instruction);
-        push_tactile_train();
+        // timeline.push(start_train_instruction);
+        // timeline.push(tactile_train_exp_instruction);
+        // push_tactile_train();
         timeline.push(end_train_instruction);
         push_tactile();
         timeline.push(between_blocks_to_auditory);
-        timeline.push(start_train_instruction);
-        timeline.push(audio_train_exp_instruction);
-        push_auditory_train();
+        // timeline.push(start_train_instruction);
+        // timeline.push(audio_train_exp_instruction);
+        // push_auditory_train();
         timeline.push(end_train_instruction);
         push_auditory();
     }
-    timeline.push(exp_to_form);
-    timeline.push(bluetooth_check);
-    timeline.push(multi_choice_block);
-    timeline.push(free_text_Qs);
+    // timeline.push(exp_to_form);
+    // timeline.push(bluetooth_check);
+    // timeline.push(multi_choice_block);
+    // timeline.push(free_text_Qs);
     timeline.push(finished);
 
     ///----------------------init----------------------///
